@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500" role="img" aria-label="About placeholder — TODO portrait">
+  <rect width="1200" height="1500" fill="#E7E5E1"/>
+  <rect x="0.5" y="0.5" width="1199" height="1499" fill="none" stroke="rgba(17,17,17,0.15)" stroke-width="1"/>
+  <text x="600" y="705" fill="#5A5A5A" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="60" font-weight="600" text-anchor="middle" dominant-baseline="middle">About</text>
+  <text x="600" y="840" fill="#5A5A5A" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="42" text-anchor="middle" dominant-baseline="middle">TODO: portrait</text>
+</svg>

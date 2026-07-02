@@ -1,0 +1,122 @@
+'use client';
+import { styled } from '@mui/material/styles';
+import Section from '@/components/layout/Section';
+import HeaderSpacer from '@/components/layout/HeaderSpacer';
+import SectionLabel from '@/components/ui/SectionLabel';
+import Type from '@/components/ui/Type';
+import ImageFigure from '@/components/ui/ImageFigure';
+import Reveal from '@/components/ui/Reveal';
+import ValueCard from '@/components/ui/ValueCard';
+import { site } from '@/content/site';
+import { capabilities } from '@/content/capabilities';
+import { approach } from '@/content/approach';
+
+const Grid2 = styled('div')(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  gap: 40,
+  marginTop: 'clamp(40px, 6vw, 72px)',
+  alignItems: 'start',
+  [theme.breakpoints.up('md')]: { gridTemplateColumns: '2fr 3fr', gap: 64 },
+}));
+
+const Recap = styled('ol')(({ theme }) => ({
+  margin: '24px 0 0',
+  padding: 0,
+  listStyle: 'none',
+  borderBottom: `1px solid ${theme.custom.colors.lineLight}`,
+}));
+
+const RecapItem = styled('li')(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '48px 1fr',
+  gap: 24,
+  paddingBlock: 28,
+  borderTop: `1px solid ${theme.custom.colors.lineLight}`,
+  '& .ri-index': { ...theme.custom.type.label, color: theme.custom.colors.inkMuted },
+}));
+
+const Values = styled('div')(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  gap: 40,
+  marginTop: 32,
+  [theme.breakpoints.up('sm')]: { gridTemplateColumns: '1fr 1fr' },
+  [theme.breakpoints.up('md')]: { gridTemplateColumns: 'repeat(4, 1fr)' },
+}));
+
+const portrait = {
+  src: '/images/about/portrait.svg',
+  width: 1200,
+  height: 1500,
+  alt: 'TODO: portrait of Cynthia Nahra',
+};
+
+export default function AboutView() {
+  return (
+    <>
+      <HeaderSpacer />
+      <Section tone="paper">
+        <SectionLabel>about</SectionLabel>
+        {/* TODO:about-headline — draft */}
+        <Type token="display3" as="h1" style={{ maxWidth: '18ch' }}>
+          Crafting spaces that respond to people and place.
+        </Type>
+        <Reveal>
+          <Grid2>
+            <ImageFigure image={portrait} sizes="(min-width:900px) 40vw, 100vw" />
+            <div>
+              {/* TODO:bio — restrained, first person */}
+              <Type token="body" as="p" style={{ maxWidth: '52ch' }}>
+                TODO:bio — I’m a junior architect from Beirut, drawn to calm, contextual and precise
+                work. This placeholder stands in until the real bio is confirmed with the owner.
+              </Type>
+              <div style={{ marginTop: 32 }}>
+                <Type token="label" as="p" muted>
+                  Education
+                </Type>
+                <Type token="body" as="p">
+                  {site.education} (TODO:confirm-school-label)
+                </Type>
+                <Type token="label" as="p" muted style={{ marginTop: 16 }}>
+                  Based in
+                </Type>
+                <Type token="body" as="p">
+                  {site.location}
+                </Type>
+              </div>
+            </div>
+          </Grid2>
+        </Reveal>
+      </Section>
+
+      <Section tone="paper">
+        <SectionLabel>capabilities</SectionLabel>
+        <Recap>
+          {capabilities.map((c) => (
+            <RecapItem key={c.index}>
+              <span className="ri-index">{c.index}</span>
+              <div>
+                <Type token="hSmall" as="h2">
+                  {c.title}
+                </Type>
+                <Type token="body" as="p" muted style={{ marginTop: 8 }}>
+                  {c.blurb}
+                </Type>
+              </div>
+            </RecapItem>
+          ))}
+        </Recap>
+
+        <div style={{ marginTop: 'clamp(48px, 8vw, 96px)' }}>
+          <SectionLabel>approach</SectionLabel>
+          <Values>
+            {approach.map((v) => (
+              <ValueCard key={v.title} icon={v.icon} title={v.title} blurb={v.blurb} />
+            ))}
+          </Values>
+        </div>
+      </Section>
+    </>
+  );
+}

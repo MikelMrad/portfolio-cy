@@ -3,14 +3,23 @@
 Rationale for this file: 8 projects × (1 hero + ≥5 renders + ≥2 drawings) ≈ 65+ images, all arriving later from Cynthia's archives/PDF exports — the pipeline must be deterministic or the build stalls.
 
 ## Naming convention (strict)
+Filenames are fixed — the code references these exact paths. Real photos should be
+**`.webp`** (preferred) or `.jpg`; `.svg` is only the auto-generated placeholder.
+Drop the real file at the same path and it replaces the placeholder (update the
+`src` extension in code — see "Swap-in procedure"; the home hero + belief are wired
+in their components, projects in `src/content/projects.js`).
 ```
-public/images/projects/{slug}/hero.{jpg|svg}
-public/images/projects/{slug}/render-01.{jpg|svg} ... render-NN
-public/images/projects/{slug}/drawing-01.{jpg|svg} ... drawing-NN
-public/images/about/portrait.{jpg|svg}
-public/images/about/preview.{jpg|svg}
-public/images/home/belief.{jpg|svg}
+public/images/home/hero.{webp|jpg}          # home hero background (full-bleed)
+public/images/home/belief.{webp|jpg}        # belief statement bg — ALSO reused on the contact page panel
+public/images/about/portrait.{webp|jpg}     # about page portrait
+public/images/about/preview.{webp|jpg}      # image in the home "about preview" section + about page
+public/images/projects/{slug}/hero.{webp|jpg}
+public/images/projects/{slug}/render-01.{webp|jpg} ... render-NN
+public/images/projects/{slug}/drawing-01.{webp|jpg} ... drawing-NN
 ```
+`{slug}` values (project folders): `opera-de-beyrouth`, `municipality-of-beirut`,
+`temporary-theatre`, `student-dorms`, `convention-center`, `affordable-housing`,
+`municipality-of-nabatieh`, `execution-drawings` — the exact list is in `src/content/projects.js`.
 
 ## Placeholder generation
 `scripts/generate-placeholders.mjs` (created in prompt 01) reads `src/content/projects.js` and writes an SVG for every image path that does not already exist as `.jpg`/`.png`:

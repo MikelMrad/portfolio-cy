@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-label="Opera de Beyrouth placeholder — TODO render-02">
+  <rect width="1920" height="1080" fill="#E7E5E1"/>
+  <rect x="0.5" y="0.5" width="1919" height="1079" fill="none" stroke="rgba(17,17,17,0.15)" stroke-width="1"/>
+  <text x="960" y="508" fill="#5A5A5A" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="54" font-weight="600" text-anchor="middle" dominant-baseline="middle">Opera de Beyrouth</text>
+  <text x="960" y="605" fill="#5A5A5A" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="38" text-anchor="middle" dominant-baseline="middle">TODO: render-02</text>
+</svg>

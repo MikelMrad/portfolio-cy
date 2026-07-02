@@ -83,7 +83,7 @@ One hairline-bounded row, centered gray wordmarks in `label`+ size, static (no m
 Fields: Full Name, Email, Message (multiline, 4 rows). MUI `TextField variant="standard"`: underline `lineLight` → 2px `ink` on focus; floating label in `label` type. Submit: full-width black block, snow `Send Message ↗`; hover inverts (paper bg, ink text, hairline border). States: MUI error + helperText per field; submitting → disabled + `Sending…`; success → inline confirmation line replaces button; failure → inline error + retry. Sends via EmailJS (`service`, `template`, `publicKey` from `NEXT_PUBLIC_EMAILJS_*` env). If env vars missing: fields disabled + visible `TODO: configure EmailJS env` notice (never a silent failure).
 
 ### Footer
-Night. Top: closing line `display2` snow — draft `Designing with context.` `TODO:footer-line`. Right: two link columns — Pages (Home/Projects/About/Contact) · Social (`TODO:social-links`, render only confirmed ones). Bottom: giant wordmark `cynthia nahra.` in `wordmarkGiant`, hairline, then `© {year} Cynthia Nahra` + `Junior Architect — Beirut` in `label nightMuted`.
+Night. Top: closing line `display2` snow — draft `Designing with context.` `TODO:footer-line`. Right: two link columns — Pages (Home/Projects/About/Contact) · Social (`TODO:social-links`, render only confirmed ones). Bottom: giant wordmark `cynthia nahra.` in `wordmarkGiant` — **fit-to-width**: the wrap is a query container and the wordmark uses `font-size: min(16cqw, 15rem)` so the fixed 14-char string fills the container edge-to-edge and never clips/overflows at any width (a plain `16vw` clamp overflowed the container for this string). Then hairline, then `© {year} Cynthia Nahra` + `Junior Architect — Beirut` in `label nightMuted`.
 
 ### ImageFigure `({ image, caption, priority })`
 Wrapper enforcing CSS `aspect-ratio` from image data (zero CLS), bg `imgLoading`, `next/image` fill + `object-fit: cover`, `sizes` set per context. Optional caption `label inkMuted` below. All images require non-empty `alt` (see assets.md discipline).
@@ -97,12 +97,12 @@ Hairline-topped row: left `← {prev.title}`, right `{next.title} →` as TextLi
 ## 4. Page assembly specs
 
 ### Home (`/`)
-1. **Hero** (night, 100svh min 640px): bg image `opera-de-beyrouth/hero` under scrim; `// cynthia nahra`; `display1` headline w/ italic accent; intro `body` snow/90 max-width 62ch — draft: "Junior architect based in Beirut, designing civic, cultural and residential spaces rooted in their context." `TODO:hero-intro`; `View Projects ↗`. Bottom-right (md+): **LatestProjectCard** — small paper-on-scrim card: thumb 96px, `Latest Project ↗` label, `Opera de Beyrouth · 2026`, links to detail.
+1. **Hero** (night, 100svh min 640px): bg image `home/hero.webp` (dedicated home hero raster — use WebP, not a traced SVG, to preserve photographic texture) under scrim; `// cynthia nahra`; `display1` headline w/ italic accent; intro `body` snow/90 max-width 62ch — draft: "Junior architect based in Beirut, designing civic, cultural and residential spaces rooted in their context." `TODO:hero-intro`; `View Projects ↗`. Bottom-right (md+): **LatestProjectCard** — small paper-on-scrim card: thumb 96px, `Latest Project ↗` label, `Opera de Beyrouth · 2026`, links to detail.
 2. **Manifesto** (paper): `display2`, ink, max-width 24ch-per-line feel — draft: "I design with intention. Every space is a dialogue between light, form, and time." `TODO:manifesto`.
 3. **About preview** (paper, 2-col md): left — `// about`, short paragraph (from bio TODO), `Learn more ↗` → /about; right — image `about/preview` 4:3.
 4. **Capabilities** (night): `// capabilities`; 4 CapabilityRows from content.
 5. **Featured intro** (paper): `display2` editorial line — draft: "Every project begins with understanding — observe before intervening, refine before adding." `TODO:featured-intro`; then header row `// featured projects` + `Explore all projects ↗` (right-aligned), hairline.
-6. **Featured cards**: 3 stacked FeaturedProjectCards (order: Opera de Beyrouth, Municipality of Beirut, Temporary Theatre), 24px gaps.
+6. **Featured cards**: 3 FeaturedProjectCards (order: Opera de Beyrouth, Municipality of Beirut, Temporary Theatre) as a **sticky stack** (matches reference), **contained** (not full-bleed) — the stack sits inside the max-width 1440 container with the standard gutter, so cards are inset with paper margins on the sides. Each card `position: sticky` pinned just below the header, near-full-viewport height; as you scroll, each project slides up and stacks over the pinned previous one, with a small per-card top offset (24px) so the previous card's top (YearChip) peeks. CSS-only (no JS/scroll-listener). The stack has bottom padding (`clamp(64px,10vw,160px)`) so it doesn't butt against the Belief section. Under `prefers-reduced-motion: reduce` it degrades to a plain vertical stack with 24px gaps (no pinning).
 7. **Belief statement** (night, full-bleed image + scrim): centered `display2` snow — draft: "Architecture is the art of what remains — the space between materials, the quiet that allows a place to breathe." `TODO:belief-line`.
 8. **Approach** (paper): `// approach`; lead `display3`; 4 ValueCards — Human-Centered Design / Context & Continuity / Modular Thinking / Precision & Craft, blurbs from content file.
 9. **ToolsStrip**.
@@ -135,10 +135,11 @@ Paper; sections: palette swatches, type ramp (every token), spacing demo, each c
 | Card image | hover | scale 1 → 1.05 | 0.8s |
 | CursorBadge | hover move | spring-follow | stiffness 150 / damping 20 |
 | Menu overlay | toggle | fade + clip, links stagger | 0.5s |
+| Featured cards | scroll | sticky-stack: each pins below header, next slides up & stacks over it (24px peek) | CSS `position: sticky`, scroll-linked |
 | Header bg | scroll > 40px | transparent → night | 0.3s |
 | Lenis | global | `lerp: 0.1` | disabled on reduced motion |
 
-`prefers-reduced-motion: reduce` → Reveal renders static, hover scales off, Lenis not instantiated, overlay uses 0.2s opacity fade.
+`prefers-reduced-motion: reduce` → Reveal renders static, hover scales off, Lenis not instantiated, overlay uses 0.2s opacity fade, featured cards fall back to a plain vertical stack (no sticky pinning).
 
 ## 6. Image rules
 Aspect ratios: hero 16:9 (min-height rules above), featured 16:9, grid-card + about 3:2 or 4:3 (fixed per slot), drawings 4:3. Every image declares width/height/alt in data. `priority` only on the first hero image per page. `sizes`: full-bleed `100vw`; 2-col `(min-width:900px) 50vw, 100vw`. Zero-CLS enforced by `ImageFigure` aspect-ratio. Placeholder + swap pipeline: `docs/assets.md`.
