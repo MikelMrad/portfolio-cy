@@ -66,18 +66,41 @@ export default function AboutView() {
           <Grid2>
             <ImageFigure image={portrait} sizes="(min-width:900px) 40vw, 100vw" />
             <div>
-              {/* TODO:bio — restrained, first person */}
               <Type token="body" as="p" style={{ maxWidth: '52ch' }}>
-                TODO:bio — I’m a junior architect from Beirut, drawn to calm, contextual and precise
-                work. This placeholder stands in until the real bio is confirmed with the owner.
+                I’m a junior architect from Beirut with hands-on experience drafting architectural
+                plans and 3D models in AutoCAD, Revit and Lumion — working to improve design
+                precision and client communication. I focus on detailed drawings and visualizations
+                that support residential and commercial projects, applying technical skill and
+                creativity toward considered, innovative architectural solutions.
               </Type>
               <div style={{ marginTop: 32 }}>
                 <Type token="label" as="p" muted>
                   Education
                 </Type>
                 <Type token="body" as="p">
-                  {site.education} (TODO:confirm-school-label)
+                  {site.education}
                 </Type>
+                <Type token="body" as="p" muted style={{ marginTop: 4 }}>
+                  Architecture Diploma · 2021–2026
+                </Type>
+
+                <Type token="label" as="p" muted style={{ marginTop: 16 }}>
+                  Experience
+                </Type>
+                <Type token="body" as="p">
+                  Intern, Bureau Ziad Akl — Beirut (2022)
+                </Type>
+                <Type token="body" as="p">
+                  Intern, Bureau Raidy Architect Studio — Beirut (2024)
+                </Type>
+
+                <Type token="label" as="p" muted style={{ marginTop: 16 }}>
+                  Languages
+                </Type>
+                <Type token="body" as="p">
+                  Arabic (native) · French (C1) · English (fluent)
+                </Type>
+
                 <Type token="label" as="p" muted style={{ marginTop: 16 }}>
                   Based in
                 </Type>

@@ -4,12 +4,12 @@ export const site = {
   wordmark: 'cynthia nahra.',
   role: 'Junior Architect',
   location: 'Beirut, Lebanon',
-  email: 'cynthianohra11@gmail.com', // TODO:confirm-email-spelling (PDF shows "nohra")
+  email: 'cynthianahra.work@gmail.com', // from portfolio PDF
   phone: '+961 81 726 981',
-  education: 'USJ — ESAR', // TODO:confirm-school-label
+  education: 'Saint-Joseph University of Beirut (USJ)', // Architecture Diploma, 2021–2026
   socials: [
-    { label: 'LinkedIn', href: '#' }, // TODO:social-links
-    { label: 'Instagram', href: '#' }, // TODO:social-links
+    { label: 'LinkedIn', href: '#' }, // TODO:social-links — not in PDF
+    { label: 'Instagram', href: '#' }, // TODO:social-links — not in PDF
   ],
-  tools: ['AutoCAD', 'Revit', 'SketchUp', 'Lumion', 'Photoshop'], // TODO:tools-extra
+  tools: ['AutoCAD', 'Revit', 'Lumion', 'SketchUp', 'Photoshop', 'InDesign'],
 };

@@ -1,30 +1,26 @@
-// Projects — single source of truth, ordered 01→08.
-// Descriptions are cleaned from the owner's portfolio PDF and are ground-truth content.
-// Shapes: see src/content/types.js. Array order = display order.
+// Projects — single source of truth. Content is transcribed from the owner's
+// portfolio PDF ("Portfolio Cynthia Nahra"), lightly copy-edited for the web
+// (PDF line-break hyphenation and obvious typos fixed; wording preserved).
+// Ordered chronologically, earliest → latest year, matching the PDF's table of
+// contents (01→07). Array order = display order; `number` tracks the same order.
+//
+// Images were extracted from the same PDF and are web-resolution (≤ 800 px).
+// Each ProjectImage carries the file's REAL pixel dimensions so the gallery
+// aspect-ratio frames match (see ui/ImageFigure.js). Swap in higher-res files
+// later by overwriting the .webp at the same path.
+//
+// NOTE on years: the PDF states academic level only (2nd/3rd/4th/Final year) and
+// an enrolment span of Sep 2021 – Jun 2026. Years below are derived from that
+// (2nd→2023, 3rd→2024, 4th→2025, Final→2026) and are best-estimates — confirm
+// with the owner. Per-project `tools` are also not itemised in the PDF; the sets
+// below reflect the skills she lists (AutoCAD, Revit, Lumion, SketchUp, Photoshop).
 
-const img = (slug, name, w, h, alt) => ({
-  src: `/images/projects/${slug}/${name}.svg`,
+const im = (slug, name, w, h, alt) => ({
+  src: `/images/projects/${slug}/${name}.webp`,
   width: w,
   height: h,
   alt,
 });
-
-const renders = (slug, n) =>
-  Array.from({ length: n }, (_, i) =>
-    img(slug, `render-${String(i + 1).padStart(2, '0')}`, 1920, 1080, `TODO: render ${i + 1} — ${slug}`)
-  );
-
-const drawings = (slug, n) =>
-  Array.from({ length: n }, (_, i) =>
-    img(slug, `drawing-${String(i + 1).padStart(2, '0')}`, 1600, 1200, `TODO: drawing ${i + 1} — ${slug}`)
-  );
-
-// execution-drawings is a technical set — both galleries are 4:3 (1600×1200) drawing-type
-// boards. Keep render-NN filenames (so the two galleries never collide on disk) but override
-// the ratio to 1600×1200 per prompt 01 ("keep ratio 1600×1200 via drawings() for BOTH arrays").
-const boards = (slug, n) => renders(slug, n).map((im) => ({ ...im, width: 1600, height: 1200 }));
-
-const hero = (slug, title) => img(slug, 'hero', 1920, 1080, `TODO: hero — ${title}`);
 
 /** @type {import('./types').Project[]} */
 export const projects = [
@@ -32,138 +28,199 @@ export const projects = [
     slug: 'student-dorms',
     number: '01',
     title: 'Student Dorms',
-    year: 2022, // TODO:confirm-years
+    year: 2023, // derived from 2nd Year Project — TODO:confirm-years
     academicContext: '2nd Year Project',
     location: 'Mansourieh, Lebanon',
     tools: ['SketchUp', 'Revit', 'Lumion'],
     categories: ['Residential', 'Education'],
-    summary: 'Student housing terraced into a hillside, balancing collective life with private retreat.',
+    summary: 'Student housing terraced into a sloped site, balancing collective life with private retreat.',
     description:
-      'Sited on a slope in Mansourieh, the residence is distributed across multiple levels that follow the natural terrain, each level carrying its own connected program — public dining, open green spaces, shared study rooms.\n\nIndividual rooms are oriented to draw natural light without compromising the intimacy and quiet needed for rest, holding a careful balance between openness and seclusion so students can relax, focus and feel at home.',
-    heroImage: hero('student-dorms', 'Student Dorms'),
-    renders: renders('student-dorms', 5),
-    drawings: drawings('student-dorms', 3),
+      'Located on a sloped site, the project uses the natural terrain as a main design strategy. The architecture is distributed across multiple levels, allowing the dormitory to follow the slope while organizing the different functions clearly: dining areas, green spaces, shared study rooms, and private student rooms.\n\nPrivacy, comfort, and functionality were key priorities. The rooms are oriented to receive natural light while preserving intimacy and quietness, creating spaces suitable for rest and personal life. Meanwhile, the shared areas encourage interaction and community between USJ students.\n\nThis balance between openness and privacy creates a calm and productive environment where students can study, socialize, relax, and feel at home.',
+    heroImage: im('student-dorms', 'hero', 640, 360, 'Student Dorms — aerial exterior render across the sloped site'),
+    renders: [
+      im('student-dorms', 'render-01', 800, 450, 'Student Dorms — interior circulation render'),
+      im('student-dorms', 'render-02', 640, 360, 'Student Dorms — shared interior space render'),
+      im('student-dorms', 'render-03', 640, 360, 'Student Dorms — courtyard render'),
+      im('student-dorms', 'render-04', 640, 360, 'Student Dorms — exterior render at dusk'),
+    ],
+    drawings: [
+      im('student-dorms', 'drawing-01', 585, 536, 'Student Dorms — massing study and plans'),
+      im('student-dorms', 'drawing-02', 616, 543, 'Student Dorms — site and context diagram'),
+      im('student-dorms', 'drawing-03', 565, 800, 'Student Dorms — exploded axonometric'),
+      im('student-dorms', 'drawing-04', 776, 799, 'Student Dorms — site plan'),
+      im('student-dorms', 'drawing-05', 800, 425, 'Student Dorms — floor plan'),
+    ],
     featured: false,
   },
   {
     slug: 'municipality-of-beirut',
     number: '02',
     title: 'Municipality of Beirut',
-    year: 2023, // TODO:confirm-years
+    year: 2024, // derived from 3rd Year Project — TODO:confirm-years
     academicContext: '3rd Year Project',
     location: 'Sodeco, Beirut',
     tools: ['SketchUp', 'AutoCAD', 'Lumion'],
     categories: ['Civic', 'Urban'],
     summary: 'A closed civic block carved open into an interactive public space for Sodeco.',
     description:
-      'The project reimagines the municipality as an open, interactive civic tool — one that serves administrative functions while fostering community engagement and connection to the city. By carving space out of a solid, inward-facing mass, the building opens toward the main street; internal courtyards and pathways emerge as green, social gathering areas that are visually and physically connected to the city.\n\nThe architecture mirrors the project’s goal: drawing people inward, encouraging them to participate, gather and interact. The municipality becomes a bridge between people and place.',
-    heroImage: hero('municipality-of-beirut', 'Municipality of Beirut'),
-    renders: renders('municipality-of-beirut', 5),
-    drawings: drawings('municipality-of-beirut', 3),
+      'This project reimagines the municipality as an open and interactive civic space — a place that serves administrative functions while encouraging community engagement and a stronger connection to the city.\n\nLocated in Sodeco, a dynamic urban area, the design is based on openness, accessibility, and fluid interaction with the public realm. The sequence of sketches shows the transformation of a closed, inward-looking volume into a welcoming and inclusive urban form. By carving spaces out of the solid mass, the project opens toward the main street, creating a natural flow that invites people in. As the form evolves, an internal courtyard and pathways emerge, shaping green and social gathering spaces that are both visually and physically connected to the city.\n\nThe architecture reflects the main goal of the project: to draw people inward, encourage participation, and create moments of gathering and interaction. The municipality becomes a bridge between people, public life, and the urban context.',
+    heroImage: im('municipality-of-beirut', 'hero', 640, 360, 'Municipality of Beirut — exterior render with vertical louvers and planting'),
+    renders: [
+      im('municipality-of-beirut', 'render-01', 800, 449, 'Municipality of Beirut — interior lounge render'),
+      im('municipality-of-beirut', 'render-02', 640, 360, 'Municipality of Beirut — interior render'),
+      im('municipality-of-beirut', 'render-03', 640, 360, 'Municipality of Beirut — stone corridor render'),
+      im('municipality-of-beirut', 'render-04', 560, 336, 'Municipality of Beirut — green wall interior render'),
+    ],
+    drawings: [
+      im('municipality-of-beirut', 'drawing-01', 170, 789, 'Municipality of Beirut — concept evolution sketch'),
+      im('municipality-of-beirut', 'drawing-02', 407, 640, 'Municipality of Beirut — site plan and section sketch'),
+      im('municipality-of-beirut', 'drawing-03', 800, 267, 'Municipality of Beirut — urban analysis diagram'),
+    ],
     featured: true,
   },
   {
     slug: 'convention-center',
     number: '03',
     title: 'Convention Center',
-    year: 2023, // TODO:confirm-years
+    year: 2024, // derived from 3rd Year Project — TODO:confirm-years
     academicContext: '3rd Year Project',
     location: 'Sodeco, Beirut',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Civic', 'Hospitality'],
     summary: 'A hybrid convention center and boutique hotel in dialogue with Beit Beirut.',
     description:
-      'Positioned between two contrasting streets near the historically significant Beit Barakat — Beit Beirut — the project answers each edge in kind: a boutique hotel sits along the quieter, residential Monot side as a retreat, while the convention center opens toward active Sodeco street for accessibility, visibility and public engagement.\n\nAt the heart of the project, a green communal space weaves the two programs together and holds a visual and spatial dialogue with Beit Beirut — a mediator between past and present, calm and activity, private and public.',
-    heroImage: hero('convention-center', 'Convention Center'),
-    renders: renders('convention-center', 5),
-    drawings: drawings('convention-center', 3),
+      'This project is a hybrid civic and hospitality space, combining a convention center and a boutique hotel. It is strategically located between two contrasting streets, Monot and Sodeco, near the historically significant Beit Barakat — Beit Beirut.\n\nThe concept is based on integration and contextual sensitivity. The project responds to the different character of each street: the boutique hotel is placed along Monot, the calmer and more residential side, offering guests a sense of retreat, intimacy, and comfort. In contrast, the convention center opens toward the lively and active Sodeco street, ensuring visibility, accessibility, and public engagement.\n\nAt the heart of the project, a central green communal space acts as a transition between the two programs. It connects the hotel and convention center while creating a calm shared environment for gathering and interaction. This green space also establishes a visual and spatial dialogue with Beit Beirut, paying homage to its historical and cultural importance — a mediator between past and present, calm and activity, private and public.',
+    heroImage: im('convention-center', 'hero', 800, 450, 'Convention Center — exterior entry render'),
+    renders: [
+      im('convention-center', 'render-01', 800, 497, 'Convention Center — aerial massing model'),
+      im('convention-center', 'render-02', 560, 331, 'Convention Center — interior courtyard steps render'),
+      im('convention-center', 'render-03', 640, 360, 'Convention Center — exterior render with lawn'),
+      im('convention-center', 'render-04', 640, 360, 'Convention Center — communal courtyard render'),
+      im('convention-center', 'render-05', 640, 360, 'Convention Center — entry plaza render'),
+    ],
+    drawings: [
+      im('convention-center', 'drawing-01', 699, 800, 'Convention Center — exploded axonometric'),
+    ],
     featured: false,
-    relatedSlug: 'execution-drawings',
   },
   {
     slug: 'affordable-housing',
     number: '04',
     title: 'Affordable Housing',
-    year: 2024, // TODO:confirm-years
+    year: 2025, // derived from 4th Year Project — TODO:confirm-years
     academicContext: '4th Year Project',
     location: 'Adlieh, Beirut',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Residential'],
     summary: 'Corridor-free modular housing for Adlieh’s working population, built from a 4×4 m unit.',
     description:
-      'Starting from a modular 4×4 m room as the core building block, the plans are reconfigured to eliminate corridors entirely, giving each apartment an open, interconnected and more generous layout while minimizing construction cost. Three unit models — a two-bedroom, a one-bedroom studio and a duplex — stack with alternating balcony orientations and studied window placements to preserve domestic intimacy.\n\nThe ground floor carries the daily needs of residents: a supermarket, a pharmacy, a gym, a restaurant, a common lobby and shared green outdoor space.',
-    heroImage: hero('affordable-housing', 'Affordable Housing'),
-    renders: renders('affordable-housing', 5),
-    drawings: drawings('affordable-housing', 3),
+      'The central concept of this project is to introduce affordable housing units in Adlieh, designed for the working population of the neighborhood. The aim is to create compact, functional living spaces that offer comfort and privacy while maximizing space efficiency and reducing construction costs.\n\nThe design is based on a modular 4×4 m room unit, used as the main building block. By avoiding traditional corridors and reorganizing the rooms into open, interconnected layouts, each apartment becomes more spacious, efficient, and practical. The project includes three housing models: a two-bedroom unit for small families or roommates, a one-bedroom studio, and a compact duplex — each containing the essential elements of urban living, such as a balcony, open-plan kitchen, living area, and bedrooms.\n\nPrivacy is ensured through the careful stacking of units, alternating balcony orientations, controlled window placement, and avoiding direct views between apartments. The building also supports daily life through shared facilities such as a supermarket, pharmacy, gym, restaurant, common lobby, and green outdoor spaces. The project therefore creates more than affordable housing; it offers a compact urban living environment where residents can live comfortably and access their daily needs within the same place.',
+    heroImage: im('affordable-housing', 'hero', 720, 720, 'Affordable Housing — exterior render of the modular towers'),
+    renders: [
+      im('affordable-housing', 'render-01', 800, 588, 'Affordable Housing — aerial site render'),
+      im('affordable-housing', 'render-02', 720, 720, 'Affordable Housing — courtyard render'),
+    ],
+    drawings: [
+      im('affordable-housing', 'drawing-01', 800, 333, 'Affordable Housing — unit models breakdown'),
+      im('affordable-housing', 'drawing-02', 800, 560, 'Affordable Housing — plan sheet'),
+      im('affordable-housing', 'drawing-03', 715, 720, 'Affordable Housing — elevations and sections'),
+    ],
     featured: false,
   },
   {
-    slug: 'temporary-theatre',
+    slug: 'modulable-theatre',
     number: '05',
-    title: 'Temporary Theatre',
-    year: 2024, // TODO:confirm-years
+    title: 'Modulable Theatre',
+    year: 2025, // derived from 4th Year Project — TODO:confirm-years
     academicContext: '4th Year Project',
     location: 'Beit Al Shams, Sharjah, UAE',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Cultural', 'Temporary'],
-    summary: 'A demountable wood-and-fabric theatre, assembled and dismantled within three days.',
+    summary: 'A demountable 2×2 m wood-and-fabric theatre, assembled and dismantled within three days.',
     description:
-      'Built from a 2×2 m modular unit in wood and fabric, the theatre is joined mechanically using traditional mortise-and-tenon connections — light to handle, fast to raise, and gentle on the heritage courtyard of Beit Al Shams that it inhabits.\n\nThe units rearrange into multiple spatial prototypes, letting performers adapt the space to each piece, while a pathway of base modules ties the new structure back to the original house, integrating the theatre visually and functionally within its context.',
-    heroImage: hero('temporary-theatre', 'Temporary Theatre'),
-    renders: renders('temporary-theatre', 5),
-    drawings: drawings('temporary-theatre', 3),
+      'The purpose of this project was to create a temporary theatre that can be assembled and disassembled within 3 days, located inside Beit Al Shams in Sharjah. The design approach prioritized simplicity, flexibility and harmony with the existing architecture. To achieve this, I selected wood and fabric as the primary materials due to their ease of handling, lightweight nature, and compatibility with rapid construction. The components are mechanically joined, specifically with the traditional Chinese mortise-and-tenon technique, to join the wooden bars and stabilize the structure.\n\nThe theatre is based on a modular system using a 2×2 meter square unit. These units can be rearranged in many configurations, allowing artists and performers to adapt the space according to their specific performance needs. This flexibility enables the creation of multiple spatial prototypes.\n\nA critical design goal was to ensure that the theatre would blend seamlessly with the existing structure of Beit Al Shams — achieved not only through the choice of materials but also by considering the placement and orientation of the modular units. A pathway created from the base units connects the new structure to the original house, integrating the theatre both visually and functionally within its context. Ultimately the project seeks to create a dynamic and transformable performance space that respects and enhances its surroundings while offering performers and audiences a unique experience.',
+    heroImage: im('modulable-theatre', 'hero', 800, 585, 'Modulable Theatre — courtyard render of the wood-and-fabric structure'),
+    renders: [
+      im('modulable-theatre', 'render-01', 640, 360, 'Modulable Theatre — aerial render in the courtyard'),
+      im('modulable-theatre', 'render-02', 640, 360, 'Modulable Theatre — covered walkway render'),
+      im('modulable-theatre', 'render-03', 640, 360, 'Modulable Theatre — modular structure render'),
+      im('modulable-theatre', 'render-04', 640, 360, 'Modulable Theatre — performance / gathering render'),
+    ],
+    drawings: [
+      im('modulable-theatre', 'drawing-01', 484, 800, 'Modulable Theatre — module and joint details'),
+      im('modulable-theatre', 'drawing-02', 800, 369, 'Modulable Theatre — plan and elevations'),
+      im('modulable-theatre', 'drawing-03', 800, 799, 'Modulable Theatre — spatial prototypes A–E'),
+    ],
     featured: true,
   },
   {
     slug: 'municipality-of-nabatieh',
     number: '06',
     title: 'Municipality of Nabatieh',
-    year: 2024, // TODO:confirm-years
+    year: 2025, // derived from 4th Year Project — TODO:confirm-years
     academicContext: '4th Year Project',
     location: 'Nabatieh, Lebanon',
     tools: ['AutoCAD', 'Revit', 'Lumion', 'Photoshop'],
     categories: ['Civic', 'Urban'],
     summary: 'A post-war municipality re-anchored in the urban fabric, rebuilding trust between a city and its people.',
     description:
-      'After destruction severed the bond between a neighborhood and its institutions, this project treats architecture as a tool of rapprochement rather than simple reconstruction. The new municipality is blended into the life of the quarter — accessible, visible, human — no longer closed or isolated.\n\nPublic spaces are designed for exchange, transparency and inclusion, with housing woven around the civic core as the active climate of a new dialogue between the spatial and the social: a renewed sense of belonging.',
-    heroImage: hero('municipality-of-nabatieh', 'Municipality of Nabatieh'),
-    renders: renders('municipality-of-nabatieh', 5),
-    drawings: drawings('municipality-of-nabatieh', 3),
+      'A neighborhood turned into ashes, a broken bond between a lost municipality and its people. A war has not only destroyed walls, it has tried to erase trust, to dissolve belonging, to fray the invisible fabric that unites citizens to their city. Therefore a question arises: how to re-establish the link between the neighborhood, the people, and the municipality? That is why my project is not simply about rebuilding roofs — it is about retracing this thread.\n\nThus, my project is not a simple response to ruins, but a living bridge between the inhabitants and their city: a continuity where the privacy of residential buildings dialogues with the transparency of the municipality. Where you can live and also be heard. Public spaces are designed to encourage exchange, transparency, and inclusion. Municipal buildings are no longer closed or isolated but blended into the life of the neighborhood — accessible, visible, human.\n\nThe answer I propose is an architecture that goes beyond its institutional function to become a tool of rapprochement, strengthening the relationship between people and government through a new municipality anchored in the heart of the urban fabric. The houses built around it are not only witnesses of repaired ties but the active climate of a new dialogue between the spatial and the social: from public spaces to meeting places. A renewed sense of belonging — architecture becomes a language of living together.',
+    heroImage: im('municipality-of-nabatieh', 'hero', 640, 360, 'Municipality of Nabatieh — street-level urban render'),
+    renders: [
+      im('municipality-of-nabatieh', 'render-01', 640, 360, 'Municipality of Nabatieh — facade render at sunset'),
+      im('municipality-of-nabatieh', 'render-02', 640, 360, 'Municipality of Nabatieh — public underpass render'),
+      im('municipality-of-nabatieh', 'render-03', 640, 360, 'Municipality of Nabatieh — aerial massing model'),
+      im('municipality-of-nabatieh', 'render-04', 640, 360, 'Municipality of Nabatieh — exterior render'),
+      im('municipality-of-nabatieh', 'render-05', 640, 360, 'Municipality of Nabatieh — street and window render'),
+      im('municipality-of-nabatieh', 'render-06', 640, 360, 'Municipality of Nabatieh — public plaza render'),
+      im('municipality-of-nabatieh', 'render-07', 640, 360, 'Municipality of Nabatieh — plaza render with figures'),
+    ],
+    drawings: [
+      im('municipality-of-nabatieh', 'drawing-01', 800, 619, 'Municipality of Nabatieh — aerial context model'),
+      im('municipality-of-nabatieh', 'drawing-02', 720, 198, 'Municipality of Nabatieh — concept evolution diagram'),
+      im('municipality-of-nabatieh', 'drawing-03', 590, 720, 'Municipality of Nabatieh — site plan'),
+      im('municipality-of-nabatieh', 'drawing-04', 536, 640, 'Municipality of Nabatieh — site plan'),
+      im('municipality-of-nabatieh', 'drawing-05', 600, 720, 'Municipality of Nabatieh — site plan'),
+      im('municipality-of-nabatieh', 'drawing-06', 699, 720, 'Municipality of Nabatieh — sections and elevations'),
+    ],
     featured: false,
   },
   {
-    slug: 'execution-drawings',
+    slug: 'beirut-opera',
     number: '07',
-    title: 'Execution Drawings',
-    year: 2023, // TODO:confirm-years
-    academicContext: '3rd Year Project',
-    location: 'Sodeco, Beirut',
-    tools: ['AutoCAD'],
-    categories: ['Technical'],
-    summary: 'Execution package for the Sodeco Convention Center — stairs, wall sections and wet-area details at 1/20.',
-    description:
-      'A full execution set developed from the Convention Center project: stair details, detailed wall sections from foundation to parapet, and toilet-block details drawn at 1/20 — with complete material call-outs covering waterproofing, thermal insulation, curtain-wall fixings and finish build-ups.',
-    heroImage: hero('execution-drawings', 'Execution Drawings'),
-    renders: boards('execution-drawings', 5), // 4:3 drawing-type boards (see boards() above)
-    drawings: drawings('execution-drawings', 4),
-    featured: false,
-    relatedSlug: 'convention-center',
-  },
-  {
-    slug: 'opera-de-beyrouth',
-    number: '08',
-    title: 'Opera de Beyrouth',
-    year: 2026, // TODO:confirm-years
-    academicContext: 'Thesis Project',
-    location: 'Beirut, Lebanon',
-    tools: ['TODO:opera-tools'],
+    title: 'Beirut Opera',
+    year: 2026, // Final Year Project — TODO:confirm-years
+    academicContext: 'Final Year Project',
+    location: 'Beirut Waterfront, Lebanon',
+    tools: ['AutoCAD', 'Revit', 'Lumion', 'Photoshop'],
     categories: ['Cultural', 'Civic'],
-    summary: 'TODO:opera-summary — thesis project for an opera house in Beirut.',
+    summary: 'A waterfront opera rising between Beirut’s towers and the sea, where architecture floats on water.',
     description:
-      'TODO:opera-description — confirm program and narrative with owner. Elements to verify before writing: Grand Auditorium (~836 seats), petit auditorium (~506 seats), site, concept.',
-    heroImage: hero('opera-de-beyrouth', 'Opera de Beyrouth'),
-    renders: renders('opera-de-beyrouth', 5),
-    drawings: drawings('opera-de-beyrouth', 3),
+      'The project is set within the context of the new Beirut, on the waterfront, in an area dominated by high-rise towers. The opera emerges from the urban ground like a stage inhabited by light. It shines between the towers and asserts its presence on a podium elevated from the ground, standing apart from their verticality. It therefore appears as a cultural figure at the heart of this urban composition, visible from both the city and the sea.\n\nThe architecture of the opera does not seek to represent either the Eastern or the Western world. Instead, it chooses to position itself between these two universes, as a space of encounter and dialogue. The opera is not dedicated to one culture over another, but to the entire world. It becomes a mosaic of voices, traditions, and influences that meet and enrich one another.\n\nAnchored on the Mediterranean Sea, it evokes the very soul of Beirut, a city whose history and identity have always maintained a privileged relationship with the sea and with everything that lies beyond the horizon. Its volumes settle along the shore as if floating on water, while creating a vast esplanade that weaves a connection between the city and the sea. Water becomes a material of the project: it moves through the spaces, reflects the light, extends the pathways, and makes the architecture vibrate like a silent melody.\n\nThe sea is not considered a simple backdrop, but an essential element of the spatial experience. Music is not only performed inside the building; it extends outward. The landscape, the waves, and the wind — in both their turmoil and their calm — take part in this permanent symphony. Thus, the opera does not simply seek to belong to a place; it seeks to reveal it, to give it a voice, and to celebrate the music that already lives within it.',
+    heroImage: im('beirut-opera', 'hero', 800, 450, 'Beirut Opera — waterfront exterior render at sunset'),
+    renders: [
+      im('beirut-opera', 'render-01', 640, 360, 'Beirut Opera — waterfront render'),
+      im('beirut-opera', 'render-02', 640, 360, 'Beirut Opera — esplanade render at sunset'),
+      im('beirut-opera', 'render-03', 640, 360, 'Beirut Opera — aerial render over the water'),
+      im('beirut-opera', 'render-04', 640, 360, 'Beirut Opera — aerial render at sunset'),
+      im('beirut-opera', 'render-05', 640, 360, 'Beirut Opera — exterior render at dusk'),
+      im('beirut-opera', 'render-06', 640, 360, 'Beirut Opera — night exterior render'),
+      im('beirut-opera', 'render-07', 640, 360, 'Beirut Opera — rooftop terrace render'),
+      im('beirut-opera', 'render-08', 640, 360, 'Beirut Opera — glazed gallery render at sunset'),
+      im('beirut-opera', 'render-09', 640, 360, 'Beirut Opera — steps to the water render'),
+      im('beirut-opera', 'render-10', 640, 360, 'Beirut Opera — auditorium interior render'),
+      im('beirut-opera', 'render-11', 640, 360, 'Beirut Opera — interior gallery render'),
+      im('beirut-opera', 'render-12', 640, 360, 'Beirut Opera — Lebanese music gallery render'),
+    ],
+    drawings: [
+      im('beirut-opera', 'drawing-01', 800, 611, 'Beirut Opera — site plan'),
+      im('beirut-opera', 'drawing-02', 800, 611, 'Beirut Opera — roof plan'),
+      im('beirut-opera', 'drawing-03', 800, 611, 'Beirut Opera — sections'),
+      im('beirut-opera', 'drawing-04', 800, 611, 'Beirut Opera — floor plan'),
+      im('beirut-opera', 'drawing-05', 800, 611, 'Beirut Opera — floor plan'),
+      im('beirut-opera', 'drawing-06', 800, 611, 'Beirut Opera — elevations'),
+      im('beirut-opera', 'drawing-07', 800, 611, 'Beirut Opera — elevations'),
+    ],
     featured: true,
     latest: true,
   },
@@ -173,8 +230,8 @@ export const projects = [
 export const getProject = (slug) => projects.find((p) => p.slug === slug);
 
 // Explicit editorial order for the Home featured section (ui-spec §4.6):
-// Opera de Beyrouth → Municipality of Beirut → Temporary Theatre.
-export const featuredProjects = ['opera-de-beyrouth', 'municipality-of-beirut', 'temporary-theatre']
+// Beirut Opera → Municipality of Beirut → Modulable Theatre.
+export const featuredProjects = ['beirut-opera', 'municipality-of-beirut', 'modulable-theatre']
   .map(getProject)
   .filter(Boolean);
 
