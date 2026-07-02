@@ -6,6 +6,7 @@ import TextLink from '@/components/ui/TextLink';
 import Type from '@/components/ui/Type';
 import CategoryChip from '@/components/ui/CategoryChip';
 import ProjectHero from '@/components/projects/ProjectHero';
+import ProjectMeta from '@/components/projects/ProjectMeta';
 import ProjectGallery from '@/components/projects/ProjectGallery';
 import ProjectNav from '@/components/projects/ProjectNav';
 import { projects, getProject } from '@/content/projects';
@@ -45,9 +46,12 @@ export default async function ProjectDetailPage({ params }) {
         <Type token="display3" as="h1">
           {project.title}
         </Type>
-        <Type token="label" as="p" muted style={{ marginTop: 16 }}>
-          {project.year} · {project.academicContext} · {project.location} · {project.tools.join(' · ')}
-        </Type>
+        <ProjectMeta
+          year={project.year}
+          academicContext={project.academicContext}
+          location={project.location}
+          tools={project.tools}
+        />
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
           {project.categories.map((c) => (
             <CategoryChip key={c}>{c}</CategoryChip>

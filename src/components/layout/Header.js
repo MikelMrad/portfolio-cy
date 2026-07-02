@@ -32,7 +32,9 @@ const Inner = styled('div')(({ theme }) => ({
   width: '100%',
   maxWidth: theme.custom.layout.maxWidth,
   marginInline: 'auto',
-  paddingInline: theme.custom.layout.gutter,
+  // Keep the wordmark / menu clear of a landscape notch.
+  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
+  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',

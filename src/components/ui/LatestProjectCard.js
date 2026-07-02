@@ -13,9 +13,11 @@ const Card = styled(Link)(({ theme }) => {
     alignItems: 'center',
     gap: 16,
     padding: 12,
-    width: 300,
+    // Full-width glass teaser under the hero copy on mobile; fixed float on md+.
+    width: '100%',
     maxWidth: '100%',
     color: c.snow,
+    [theme.breakpoints.up('md')]: { width: 320 },
     backgroundColor: c.chipDark,
     backdropFilter: 'blur(8px)',
     WebkitBackdropFilter: 'blur(8px)',

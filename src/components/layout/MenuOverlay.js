@@ -1,6 +1,7 @@
 'use client';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { styled, useTheme } from '@mui/material/styles';
 import { site } from '@/content/site';
@@ -22,28 +23,56 @@ const Overlay = styled(motion.div)(({ theme }) => ({
   color: theme.custom.colors.snow,
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
-  paddingInline: theme.custom.layout.gutter,
-  paddingBlock: 96,
+  // Mobile: anchor the nav to the bottom (thumb zone) and clear the notch /
+  // home indicator. Desktop keeps the centered composition.
+  justifyContent: 'flex-end',
+  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
+  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
+  paddingTop: `calc(${theme.custom.layout.header.xs}px + 24px)`,
+  paddingBottom: 'max(56px, calc(40px + env(safe-area-inset-bottom)))',
+  [theme.breakpoints.up('md')]: {
+    justifyContent: 'center',
+    paddingBlock: 96,
+  },
 }));
 
 const List = styled(motion.nav)({ display: 'flex', flexDirection: 'column', gap: 4 });
 
 const MenuLink = styled(Link)(({ theme }) => {
   const m = theme.custom.motion;
+  const c = theme.custom.colors;
   return {
     ...theme.custom.type.display3,
-    display: 'inline-block',
-    color: theme.custom.colors.nightMuted,
+    // Larger, thumb-friendly links on mobile; spec display3 size returns at md.
+    fontSize: 'clamp(2.25rem, 9vw, 2.75rem)',
+    display: 'flex',
+    alignItems: 'center',
+    minHeight: 56,
+    color: c.nightMuted,
     width: 'fit-content',
     paddingBlock: 6,
     transition: `transform ${m.durations.reduced}s ${m.ease}, color ${m.durations.reduced}s ${m.ease}`,
-    '&:hover': { color: theme.custom.colors.snow },
-    '&:focus-visible': { outline: `2px solid ${theme.custom.colors.snow}`, outlineOffset: 4, color: theme.custom.colors.snow },
+    // Current-page marker: a short leading rule + snow text (a11y via aria-current).
+    '&::before': {
+      content: '""',
+      display: 'inline-block',
+      width: 0,
+      height: 2,
+      marginRight: 0,
+      backgroundColor: c.snow,
+      transition: `width ${m.durations.reduced}s ${m.ease}, margin-right ${m.durations.reduced}s ${m.ease}`,
+    },
+    '&[aria-current="page"]': {
+      color: c.snow,
+      '&::before': { width: 28, marginRight: 20 },
+    },
+    '&:hover': { color: c.snow },
+    '&:focus-visible': { outline: `2px solid ${c.snow}`, outlineOffset: 4, color: c.snow },
     // translate only when motion is allowed (reduced-motion keeps the color change only)
     '@media (prefers-reduced-motion: no-preference)': {
       '&:hover': { transform: 'translateX(8px)' },
     },
+    [theme.breakpoints.up('md')]: { fontSize: theme.custom.type.display3.fontSize, minHeight: 'auto' },
   };
 });
 
@@ -59,12 +88,23 @@ const Meta = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: 4,
+  [theme.breakpoints.down('md')]: { gap: 8 },
 }));
 
 const MetaLink = styled('a')(({ theme }) => ({
   color: 'inherit',
   width: 'fit-content',
+  display: 'inline-flex',
+  alignItems: 'center',
+  // ≥44px touch target on mobile without disturbing the desktop line rhythm.
+  [theme.breakpoints.down('md')]: { minHeight: 44 },
   '&:focus-visible': { outline: `2px solid ${theme.custom.colors.snow}`, outlineOffset: 4 },
+}));
+
+const MetaText = styled('span')(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  [theme.breakpoints.down('md')]: { minHeight: 44 },
 }));
 
 export default function MenuOverlay({ open, onClose, triggerRef }) {
@@ -72,7 +112,12 @@ export default function MenuOverlay({ open, onClose, triggerRef }) {
   const lenisRef = useContext(LenisContext);
   const theme = useTheme();
   const reduce = useReducedMotion();
+  const pathname = usePathname();
   const m = theme.custom.motion;
+
+  // Active when the route matches exactly, or (for section roots like /projects)
+  // when the current path sits under it — so a project detail marks "Projects".
+  const isActive = (href) => (href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`));
 
   // Motion variants: clip-path reveal + staggered link fade-up; opacity-only under reduced motion.
   const overlayVariants = reduce
@@ -157,7 +202,7 @@ export default function MenuOverlay({ open, onClose, triggerRef }) {
             <List>
               {pages.map((p) => (
                 <motion.div key={p.key} variants={itemVariants}>
-                  <MenuLink href={p.href} onClick={onClose}>
+                  <MenuLink href={p.href} onClick={onClose} aria-current={isActive(p.href) ? 'page' : undefined}>
                     {t(`nav.${p.key}`)}
                   </MenuLink>
                 </motion.div>
@@ -167,7 +212,8 @@ export default function MenuOverlay({ open, onClose, triggerRef }) {
               <Hairline>
                 <Meta>
                   <MetaLink href={`mailto:${site.email}`}>{site.email}</MetaLink>
-                  <span>{site.location}</span>
+                  <MetaLink href={`tel:${site.phone.replace(/\s+/g, '')}`}>{site.phone}</MetaLink>
+                  <MetaText>{site.location}</MetaText>
                 </Meta>
               </Hairline>
             </motion.div>

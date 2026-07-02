@@ -19,13 +19,22 @@ const Panel = styled('div')(({ theme }) => ({
   overflow: 'hidden',
   color: theme.custom.colors.snow,
   backgroundColor: theme.custom.colors.night,
-  padding: 'clamp(32px, 6vw, 88px)',
-  paddingTop: `calc(${theme.custom.layout.header.md}px + clamp(32px, 6vw, 88px))`,
+  paddingBlock: 'clamp(32px, 6vw, 88px)',
+  paddingLeft: `max(clamp(32px, 6vw, 88px), env(safe-area-inset-left))`,
+  paddingRight: `max(clamp(32px, 6vw, 88px), env(safe-area-inset-right))`,
+  // Clear the fixed header (mobile height here; desktop height at md+).
+  paddingTop: `calc(${theme.custom.layout.header.xs}px + clamp(24px, 6vw, 88px))`,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  gap: 48,
-  minHeight: 480,
+  gap: 40,
+  // Shorter on mobile so the form is reachable sooner; desktop keeps the tall panel.
+  minHeight: 360,
+  [theme.breakpoints.up('md')]: {
+    paddingTop: `calc(${theme.custom.layout.header.md}px + clamp(32px, 6vw, 88px))`,
+    gap: 48,
+    minHeight: 480,
+  },
 }));
 
 const Scrim = styled('div')({
@@ -50,8 +59,14 @@ const ContactList = styled('ul')(({ theme }) => ({
 const FormCard = styled('div')(({ theme }) => ({
   backgroundColor: theme.custom.colors.paper,
   color: theme.custom.colors.ink,
-  padding: 'clamp(32px, 6vw, 88px)',
-  paddingTop: `calc(${theme.custom.layout.header.md}px + clamp(24px, 4vw, 56px))`,
+  paddingBlock: 'clamp(32px, 6vw, 88px)',
+  paddingLeft: `max(clamp(32px, 6vw, 88px), env(safe-area-inset-left))`,
+  paddingRight: `max(clamp(32px, 6vw, 88px), env(safe-area-inset-right))`,
+  // Only the desktop split places this card under the header; on mobile it sits
+  // below the panel and needs no header offset.
+  [theme.breakpoints.up('md')]: {
+    paddingTop: `calc(${theme.custom.layout.header.md}px + clamp(24px, 4vw, 56px))`,
+  },
 }));
 
 const panelImage = {

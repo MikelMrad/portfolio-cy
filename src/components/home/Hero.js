@@ -22,9 +22,14 @@ const Root = styled('section')(({ theme }) => ({
   position: 'relative',
   minHeight: 'max(640px, 100svh)',
   display: 'flex',
+  // Mobile: stack the copy column over the LatestProjectCard so neither is
+  // squeezed. Desktop keeps the single-row layout (the card is absolute on md+,
+  // so direction is inconsequential there).
+  flexDirection: 'column',
   backgroundColor: theme.custom.colors.night,
   color: theme.custom.colors.snow,
   overflow: 'hidden',
+  [theme.breakpoints.up('md')]: { flexDirection: 'row' },
 }));
 
 const Scrim = styled('div')(({ theme }) => ({
@@ -39,10 +44,14 @@ const Scrim = styled('div')(({ theme }) => ({
 const Inner = styled('div')(({ theme }) => ({
   position: 'relative',
   zIndex: 2,
+  // Fill the hero height in the mobile column so the copy stays bottom-anchored
+  // (justify-content:flex-end); harmless in the desktop row.
+  flex: '1 1 auto',
   width: '100%',
   maxWidth: theme.custom.layout.maxWidth,
   marginInline: 'auto',
-  paddingInline: theme.custom.layout.gutter,
+  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
+  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
   paddingTop: 120,
   paddingBottom: 48,
   display: 'flex',
@@ -67,12 +76,23 @@ const Rise = styled('div', { shouldForwardProp: (p) => p !== 'step' })(({ theme,
 });
 
 const CardSlot = styled('div')(({ theme }) => ({
-  marginTop: 40,
+  // Mobile: a full-width slot below the copy. position/zIndex lift it above the
+  // hero Scrim (zIndex:1); paddingBottom clears the home indicator when the card
+  // is the last thing over the image.
+  position: 'relative',
+  zIndex: 3,
+  marginTop: 24,
+  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
+  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
+  paddingBottom: 'max(24px, env(safe-area-inset-bottom))',
   [theme.breakpoints.up('md')]: {
     position: 'absolute',
     right: theme.custom.layout.gutter,
     bottom: 48,
     marginTop: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingBottom: 0,
     zIndex: 3,
   },
 }));

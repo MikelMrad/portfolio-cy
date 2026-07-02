@@ -21,7 +21,8 @@ const Inner = styled('div')(({ theme }) => ({
   width: '100%',
   maxWidth: theme.custom.layout.maxWidth,
   marginInline: 'auto',
-  paddingInline: theme.custom.layout.gutter,
+  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
+  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
 }));
 
 const Top = styled('div')(({ theme }) => ({
@@ -48,17 +49,20 @@ const ColTitle = styled('p')(({ theme }) => ({
   margin: 0,
 }));
 
-const FooterLink = styled(Link)(({ theme }) => ({
+// ≥44px touch targets on mobile; desktop keeps the tight inline rhythm.
+const footerLinkBase = (theme) => ({
   ...theme.custom.type.label,
   color: theme.custom.colors.snow,
+  display: 'inline-flex',
+  alignItems: 'center',
+  width: 'fit-content',
+  [theme.breakpoints.down('md')]: { minHeight: 44 },
   '&:focus-visible': { outline: `2px solid ${theme.custom.colors.snow}`, outlineOffset: 4 },
-}));
+});
 
-const ExternalLink = styled('a')(({ theme }) => ({
-  ...theme.custom.type.label,
-  color: theme.custom.colors.snow,
-  '&:focus-visible': { outline: `2px solid ${theme.custom.colors.snow}`, outlineOffset: 4 },
-}));
+const FooterLink = styled(Link)(({ theme }) => footerLinkBase(theme));
+
+const ExternalLink = styled('a')(({ theme }) => footerLinkBase(theme));
 
 // Query container so the wordmark can size to its own width (not the viewport).
 const WordmarkWrap = styled('div')({ overflow: 'hidden', marginTop: 64, containerType: 'inline-size' });

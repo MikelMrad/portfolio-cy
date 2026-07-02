@@ -100,6 +100,8 @@ export default function ContactForm() {
         error={Boolean(errors.fullName)}
         helperText={errors.fullName || ' '}
         disabled={disabled}
+        autoComplete="name"
+        slotProps={{ htmlInput: { autoCapitalize: 'words' } }}
         sx={fieldSx}
       />
       <TextField
@@ -112,6 +114,8 @@ export default function ContactForm() {
         error={Boolean(errors.email)}
         helperText={errors.email || ' '}
         disabled={disabled}
+        autoComplete="email"
+        slotProps={{ htmlInput: { inputMode: 'email', autoCapitalize: 'none', autoCorrect: 'off', spellCheck: false } }}
         sx={fieldSx}
       />
       <TextField

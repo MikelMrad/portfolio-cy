@@ -33,6 +33,17 @@ export const metadata = {
   description: `Portfolio of ${site.name}, ${site.role} based in ${site.location}.`,
 };
 
+// `viewport-fit=cover` opts the page into the device safe-area insets that the
+// header/hero/menu/footer consume via env(safe-area-inset-*). `themeColor` tints
+// the mobile browser chrome to match the dark header. (Next 16 viewport export.)
+/** @type {import('next').Viewport} */
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#0E0E0E',
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
