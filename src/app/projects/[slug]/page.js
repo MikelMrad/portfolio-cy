@@ -85,7 +85,8 @@ export default async function ProjectDetailPage({ params }) {
 
         {drawings.length ? (
           <div style={block}>
-            <ProjectGallery label="drawings & documentation" images={drawings} />
+            {/* A lone drawing spans the page rather than sitting orphaned at half width. */}
+            <ProjectGallery label="drawings & documentation" images={drawings} firstFullWidth={drawings.length === 1} />
           </div>
         ) : null}
 

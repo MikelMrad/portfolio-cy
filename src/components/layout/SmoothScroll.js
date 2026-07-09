@@ -21,7 +21,15 @@ export default function SmoothScroll({ children }) {
     };
     rafId = requestAnimationFrame(raf);
 
+    // Lenis auto-observes content resizes, but late layout shifts (web fonts
+    // settling, images decoding) can land just outside that. Re-measure the
+    // scroll limit once those complete so the wheel always reaches the bottom.
+    const resize = () => lenis.resize();
+    window.addEventListener('load', resize);
+    if (document.fonts?.ready) document.fonts.ready.then(resize).catch(() => {});
+
     return () => {
+      window.removeEventListener('load', resize);
       cancelAnimationFrame(rafId);
       lenis.destroy();
       lenisRef.current = null;
