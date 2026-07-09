@@ -131,14 +131,18 @@ export const projects = [
     summary: 'Corridor-free modular housing for Adlieh’s working population, built from a 4×4 m unit.',
     description:
       'The central concept of this project is to introduce affordable housing units in Adlieh, designed for the working population of the neighborhood. The aim is to create compact, functional living spaces that offer comfort and privacy while maximizing space efficiency and reducing construction costs.\n\nThe design is based on a modular 4×4 m room unit, used as the main building block. By avoiding traditional corridors and reorganizing the rooms into open, interconnected layouts, each apartment becomes more spacious, efficient, and practical. The project includes three housing models: a two-bedroom unit for small families or roommates, a one-bedroom studio, and a compact duplex — each containing the essential elements of urban living, such as a balcony, open-plan kitchen, living area, and bedrooms.\n\nPrivacy is ensured through the careful stacking of units, alternating balcony orientations, controlled window placement, and avoiding direct views between apartments. The building also supports daily life through shared facilities such as a supermarket, pharmacy, gym, restaurant, common lobby, and green outdoor spaces. The project therefore creates more than affordable housing; it offers a compact urban living environment where residents can live comfortably and access their daily needs within the same place.',
-    heroImage: im('affordable-housing', 'hero', 720, 720, 'Affordable Housing — exterior render of the modular towers'),
-    conceptImage: 'render-01',
+    heroImage: im('affordable-housing', 'hero', 1600, 900, 'Affordable Housing — exterior render of the modular towers and plaza'),
+    conceptImage: 'render-07',
     renders: [
-      im('affordable-housing', 'render-01', 800, 588, 'Affordable Housing — aerial site render'),
-      im('affordable-housing', 'render-02', 720, 720, 'Affordable Housing — courtyard render'),
+      im('affordable-housing', 'render-00', 800, 333, 'Affordable Housing — unit models: apartment types in axonometric and plan'),
+      im('affordable-housing', 'render-01', 1600, 900, 'Affordable Housing — courtyard and stacked balconies at sunset'),
+      im('affordable-housing', 'render-02', 1600, 900, 'Affordable Housing — communal courtyard render with a mature tree'),
+      im('affordable-housing', 'render-04', 1600, 900, 'Affordable Housing — ground-level undercroft render with raised walkway'),
+      im('affordable-housing', 'render-05', 1600, 900, 'Affordable Housing — courtyard render with pedestrian bridge and ground-floor gym'),
+      im('affordable-housing', 'render-06', 1600, 900, 'Affordable Housing — elevated render between the stacked modular units'),
+      im('affordable-housing', 'render-07', 800, 588, 'Affordable Housing — aerial site render of the building on its triangular plot'),
     ],
     drawings: [
-      im('affordable-housing', 'drawing-01', 800, 333, 'Affordable Housing — unit models breakdown'),
       im('affordable-housing', 'drawing-02', 800, 560, 'Affordable Housing — plan sheet'),
       im('affordable-housing', 'drawing-03', 715, 720, 'Affordable Housing — elevations and sections'),
     ],
