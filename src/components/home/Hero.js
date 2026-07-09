@@ -113,10 +113,9 @@ export default function Hero() {
         <Rise step={0}>
           <SectionLabel tone="night">{site.wordmark.replace(/\.$/, '')}</SectionLabel>
         </Rise>
-        {/* TODO:hero-headline — confirm wording (one italic accent word) */}
         <Rise step={1}>
           <Type token="display1" as="h1" sx={{ maxWidth: '14ch', '& em': { fontStyle: 'italic' } }}>
-            Architecture in <em>Context</em>
+            Architectural <em>Portfolio</em>
           </Type>
         </Rise>
         {/* TODO:hero-intro — draft */}
