@@ -6,7 +6,7 @@ import TextLink from '@/components/ui/TextLink';
 import Type from '@/components/ui/Type';
 import Reveal from '@/components/ui/Reveal';
 import FeaturedProjectCard from '@/components/ui/FeaturedProjectCard';
-import { featuredProjects } from '@/content/projects';
+import { projects } from '@/content/projects';
 import { t } from '@/content/i18n';
 
 const HeaderRow = styled('div')(({ theme }) => ({
@@ -62,7 +62,7 @@ const Sticky = styled('div')(({ theme }) => {
 });
 
 export default function Featured() {
-  const max = featuredProjects.length - 1;
+  const max = projects.length - 1;
   return (
     <>
       <Section tone="paper">
@@ -73,12 +73,12 @@ export default function Featured() {
           </Type>
         </Reveal>
         <HeaderRow>
-          <SectionLabel style={{ marginBottom: 0 }}>featured projects</SectionLabel>
+          <SectionLabel style={{ marginBottom: 0 }}>all projects</SectionLabel>
           <TextLink href="/projects">{t('home.exploreAll')}</TextLink>
         </HeaderRow>
       </Section>
       <Stack>
-        {featuredProjects.map((p, i) => (
+        {projects.map((p, i) => (
           <Sticky key={p.slug} style={{ '--i': i, '--max': max }}>
             <FeaturedProjectCard project={p} />
           </Sticky>
