@@ -7,9 +7,10 @@ import Type from '@/components/ui/Type';
 import CategoryChip from '@/components/ui/CategoryChip';
 import ProjectHero from '@/components/projects/ProjectHero';
 import ProjectMeta from '@/components/projects/ProjectMeta';
+import ProjectConcept from '@/components/projects/ProjectConcept';
 import ProjectGallery from '@/components/projects/ProjectGallery';
 import ProjectNav from '@/components/projects/ProjectNav';
-import { projects, getProject } from '@/content/projects';
+import { projects, getProject, conceptImageFor } from '@/content/projects';
 
 export const dynamicParams = false;
 
@@ -36,6 +37,14 @@ export default async function ProjectDetailPage({ params }) {
   const next = projects[(index + 1) % projects.length];
   const related = project.relatedSlug ? getProject(project.relatedSlug) : null;
   const paragraphs = project.description.split('\n\n');
+  // The chosen image sits beside the concept prose; drop it from its gallery so
+  // it isn't shown twice. Galleries only render when they have surviving images,
+  // so a project with no sheets/renders/drawings shows no empty section.
+  const conceptImage = conceptImageFor(project);
+  const withoutConcept = (list) => (list || []).filter((im) => im.src !== conceptImage?.src);
+  const sheets = withoutConcept(project.sheets);
+  const renders = withoutConcept(project.renders);
+  const drawings = withoutConcept(project.drawings);
 
   return (
     <>
@@ -59,20 +68,26 @@ export default async function ProjectDetailPage({ params }) {
         </div>
 
         <div style={block}>
-          <SectionLabel>concept</SectionLabel>
-          {paragraphs.map((para, i) => (
-            <Type key={`${slug}-p${i}`} token="body" as="p" style={{ maxWidth: '70ch', marginBottom: 20 }}>
-              {para}
-            </Type>
-          ))}
+          <ProjectConcept paragraphs={paragraphs} image={conceptImage} />
         </div>
 
-        <div style={block}>
-          <ProjectGallery label="renders & model" images={project.renders} firstFullWidth />
-        </div>
-        <div style={block}>
-          <ProjectGallery label="drawings & documentation" images={project.drawings} />
-        </div>
+        {sheets.length ? (
+          <div style={block}>
+            <ProjectGallery label="plans & axonometric" images={sheets} single />
+          </div>
+        ) : null}
+
+        {renders.length ? (
+          <div style={block}>
+            <ProjectGallery label="renders & model" images={renders} firstFullWidth />
+          </div>
+        ) : null}
+
+        {drawings.length ? (
+          <div style={block}>
+            <ProjectGallery label="drawings & documentation" images={drawings} />
+          </div>
+        ) : null}
 
         {related ? (
           <div style={block}>

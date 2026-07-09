@@ -25,6 +25,8 @@
  * @property {ProjectImage} heroImage
  * @property {ProjectImage[]} renders   // >= 5
  * @property {ProjectImage[]} drawings  // >= 2
+ * @property {ProjectImage[]} [sheets]  // full-page plans (e.g. from PDFs), stacked full-width below the concept text in order
+ * @property {string|ProjectImage} [conceptImage] // image beside the concept prose: a name ('render-02','hero') or im() object; defaults to renders[0]
  * @property {boolean} featured
  * @property {boolean} [latest]       // exactly one project: hero mini-card target
  * @property {string} [relatedSlug]   // e.g. execution-drawings <-> convention-center

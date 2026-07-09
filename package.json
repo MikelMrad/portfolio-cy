@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "placeholders": "node scripts/generate-placeholders.mjs"
+    "placeholders": "node scripts/generate-placeholders.mjs",
+    "pdf:extract": "node scripts/extract-pdfs.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
