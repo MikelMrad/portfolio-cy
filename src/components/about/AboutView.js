@@ -4,21 +4,11 @@ import Section from '@/components/layout/Section';
 import HeaderSpacer from '@/components/layout/HeaderSpacer';
 import SectionLabel from '@/components/ui/SectionLabel';
 import Type from '@/components/ui/Type';
-import ImageFigure from '@/components/ui/ImageFigure';
 import Reveal from '@/components/ui/Reveal';
 import ValueCard from '@/components/ui/ValueCard';
 import { site } from '@/content/site';
 import { capabilities } from '@/content/capabilities';
 import { approach } from '@/content/approach';
-
-const Grid2 = styled('div')(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: '1fr',
-  gap: 40,
-  marginTop: 'clamp(40px, 6vw, 72px)',
-  alignItems: 'start',
-  [theme.breakpoints.up('md')]: { gridTemplateColumns: '2fr 3fr', gap: 64 },
-}));
 
 const Recap = styled('ol')(({ theme }) => ({
   margin: '24px 0 0',
@@ -45,13 +35,6 @@ const Values = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: { gridTemplateColumns: 'repeat(4, 1fr)' },
 }));
 
-const portrait = {
-  src: '/images/about/portrait.svg',
-  width: 1200,
-  height: 1500,
-  alt: 'TODO: portrait of Cynthia Nahra',
-};
-
 export default function AboutView() {
   return (
     <>
@@ -63,53 +46,50 @@ export default function AboutView() {
           Crafting spaces that respond to people and place.
         </Type>
         <Reveal>
-          <Grid2>
-            <ImageFigure image={portrait} sizes="(min-width:900px) 40vw, 100vw" />
-            <div>
-              <Type token="body" as="p" style={{ maxWidth: '52ch' }}>
-                I’m a junior architect from Beirut with hands-on experience drafting architectural
-                plans and 3D models in AutoCAD, Revit and Lumion — working to improve design
-                precision and client communication. I focus on detailed drawings and visualizations
-                that support residential and commercial projects, applying technical skill and
-                creativity toward considered, innovative architectural solutions.
+          <div style={{ marginTop: 'clamp(40px, 6vw, 72px)' }}>
+            <Type token="body" as="p" style={{ maxWidth: '52ch' }}>
+              I’m a junior architect from Beirut with hands-on experience drafting architectural
+              plans and 3D models in AutoCAD, Revit and Lumion — working to improve design
+              precision and client communication. I focus on detailed drawings and visualizations
+              that support residential and commercial projects, applying technical skill and
+              creativity toward considered, innovative architectural solutions.
+            </Type>
+            <div style={{ marginTop: 32 }}>
+              <Type token="label" as="p" muted>
+                Education
               </Type>
-              <div style={{ marginTop: 32 }}>
-                <Type token="label" as="p" muted>
-                  Education
-                </Type>
-                <Type token="body" as="p">
-                  {site.education}
-                </Type>
-                <Type token="body" as="p" muted style={{ marginTop: 4 }}>
-                  Architecture Diploma · 2021–2026
-                </Type>
+              <Type token="body" as="p">
+                {site.education}
+              </Type>
+              <Type token="body" as="p" muted style={{ marginTop: 4 }}>
+                Architecture Diploma · 2021–2026
+              </Type>
 
-                <Type token="label" as="p" muted style={{ marginTop: 16 }}>
-                  Experience
-                </Type>
-                <Type token="body" as="p">
-                  Intern, Bureau Ziad Akl — Beirut (2022)
-                </Type>
-                <Type token="body" as="p">
-                  Intern, Bureau Raidy Architect Studio — Beirut (2024)
-                </Type>
+              <Type token="label" as="p" muted style={{ marginTop: 16 }}>
+                Experience
+              </Type>
+              <Type token="body" as="p">
+                Intern, Bureau Ziad Akl — Beirut (2022)
+              </Type>
+              <Type token="body" as="p">
+                Intern, Bureau Raidy Architect Studio — Beirut (2024)
+              </Type>
 
-                <Type token="label" as="p" muted style={{ marginTop: 16 }}>
-                  Languages
-                </Type>
-                <Type token="body" as="p">
-                  Arabic (native) · French (C1) · English (fluent)
-                </Type>
+              <Type token="label" as="p" muted style={{ marginTop: 16 }}>
+                Languages
+              </Type>
+              <Type token="body" as="p">
+                Arabic (native) · French (C1) · English (fluent)
+              </Type>
 
-                <Type token="label" as="p" muted style={{ marginTop: 16 }}>
-                  Based in
-                </Type>
-                <Type token="body" as="p">
-                  {site.location}
-                </Type>
-              </div>
+              <Type token="label" as="p" muted style={{ marginTop: 16 }}>
+                Based in
+              </Type>
+              <Type token="body" as="p">
+                {site.location}
+              </Type>
             </div>
-          </Grid2>
+          </div>
         </Reveal>
       </Section>
 

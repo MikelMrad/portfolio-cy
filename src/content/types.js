@@ -27,7 +27,11 @@
  * @property {ProjectImage[]} drawings  // >= 2
  * @property {ProjectImage[]} [sheets]  // full-page plans (e.g. from PDFs), stacked full-width below the concept text in order
  * @property {string} [sheetsLabel]  // section heading for `sheets` (default 'plans')
+ * @property {number} [sheetsColumns] // lay the sheets out N-across on md+ (default: stacked full-width)
  * @property {string|ProjectImage} [conceptImage] // image beside the concept prose: a name ('render-02','hero') or im() object; defaults to renders[0]
+ * @property {(string|ProjectImage)[]} [conceptImages] // several images stacked beside the concept prose (overrides conceptImage)
+ * @property {boolean} [conceptMatchHeight] // single concept image fills the column to match the text height
+ * @property {boolean} [drawingsSingle] // stack the drawings gallery full-width, one per row
  * @property {boolean} featured
  * @property {boolean} [latest]       // exactly one project: hero mini-card target
  * @property {string} [relatedSlug]   // e.g. execution-drawings <-> convention-center

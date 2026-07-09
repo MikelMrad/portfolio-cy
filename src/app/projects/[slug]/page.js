@@ -10,7 +10,7 @@ import ProjectMeta from '@/components/projects/ProjectMeta';
 import ProjectConcept from '@/components/projects/ProjectConcept';
 import ProjectGallery from '@/components/projects/ProjectGallery';
 import ProjectNav from '@/components/projects/ProjectNav';
-import { projects, getProject, conceptImageFor } from '@/content/projects';
+import { projects, getProject, conceptImagesFor } from '@/content/projects';
 
 export const dynamicParams = false;
 
@@ -37,11 +37,12 @@ export default async function ProjectDetailPage({ params }) {
   const next = projects[(index + 1) % projects.length];
   const related = project.relatedSlug ? getProject(project.relatedSlug) : null;
   const paragraphs = project.description.split('\n\n');
-  // The chosen image sits beside the concept prose; drop it from its gallery so
-  // it isn't shown twice. Galleries only render when they have surviving images,
-  // so a project with no sheets/renders/drawings shows no empty section.
-  const conceptImage = conceptImageFor(project);
-  const withoutConcept = (list) => (list || []).filter((im) => im.src !== conceptImage?.src);
+  // The chosen image(s) sit beside the concept prose; drop them from their gallery
+  // so they aren't shown twice. Galleries only render when they have surviving
+  // images, so a project with no sheets/renders/drawings shows no empty section.
+  const conceptImages = conceptImagesFor(project);
+  const conceptSrcs = new Set(conceptImages.map((im) => im.src));
+  const withoutConcept = (list) => (list || []).filter((im) => !conceptSrcs.has(im.src));
   const sheets = withoutConcept(project.sheets);
   const renders = withoutConcept(project.renders);
   const drawings = withoutConcept(project.drawings);
@@ -68,12 +69,17 @@ export default async function ProjectDetailPage({ params }) {
         </div>
 
         <div style={block}>
-          <ProjectConcept paragraphs={paragraphs} image={conceptImage} />
+          <ProjectConcept paragraphs={paragraphs} images={conceptImages} matchHeight={project.conceptMatchHeight} />
         </div>
 
         {sheets.length ? (
           <div style={block}>
-            <ProjectGallery label={project.sheetsLabel || 'plans'} images={sheets} single />
+            <ProjectGallery
+              label={project.sheetsLabel || 'plans'}
+              images={sheets}
+              single={!project.sheetsColumns}
+              columns={project.sheetsColumns || 0}
+            />
           </div>
         ) : null}
 
@@ -85,8 +91,14 @@ export default async function ProjectDetailPage({ params }) {
 
         {drawings.length ? (
           <div style={block}>
-            {/* A lone drawing spans the page rather than sitting orphaned at half width. */}
-            <ProjectGallery label="drawings & documentation" images={drawings} firstFullWidth={drawings.length === 1} />
+            {/* A lone drawing spans the page rather than sitting orphaned at half width;
+                `drawingsSingle` stacks every drawing full-width for projects that opt in. */}
+            <ProjectGallery
+              label="drawings & documentation"
+              images={drawings}
+              single={project.drawingsSingle}
+              firstFullWidth={drawings.length === 1}
+            />
           </div>
         ) : null}
 

@@ -85,6 +85,7 @@ export const projects = [
       im('municipality-of-beirut', 'drawing-01', 170, 789, 'Municipality of Beirut — concept evolution sketch'),
     ],
     sheetsLabel: 'floor plans',
+    sheetsColumns: 3, // show the three floor plans side by side
     sheets: [
       im('municipality-of-beirut', 'plan-01', 1415, 2000, 'Municipality of Beirut — floor plan with auditorium, foyer and public courtyard'),
       im('municipality-of-beirut', 'plan-02', 1415, 2000, 'Municipality of Beirut — floor plan with offices, meeting rooms and courtyard'),
@@ -137,6 +138,7 @@ export const projects = [
       im('affordable-housing', 'render-00', 800, 333, 'Affordable Housing — unit models: apartment types in axonometric and plan'),
       im('affordable-housing', 'render-01', 1600, 900, 'Affordable Housing — courtyard and stacked balconies at sunset'),
       im('affordable-housing', 'render-02', 1600, 900, 'Affordable Housing — communal courtyard render with a mature tree'),
+      im('affordable-housing', 'render-03', 1600, 900, 'Affordable Housing — exterior render of the modular towers at dusk'),
       im('affordable-housing', 'render-04', 1600, 900, 'Affordable Housing — ground-level undercroft render with raised walkway'),
       im('affordable-housing', 'render-05', 1600, 900, 'Affordable Housing — courtyard render with pedestrian bridge and ground-floor gym'),
       im('affordable-housing', 'render-06', 1600, 900, 'Affordable Housing — elevated render between the stacked modular units'),
@@ -146,6 +148,7 @@ export const projects = [
       im('affordable-housing', 'drawing-02', 800, 560, 'Affordable Housing — plan sheet'),
       im('affordable-housing', 'drawing-03', 715, 720, 'Affordable Housing — elevations and sections'),
     ],
+    drawingsSingle: true, // stack drawings full-width, one per row
     featured: false,
   },
   {
@@ -161,7 +164,8 @@ export const projects = [
     description:
       'The purpose of this project was to create a temporary theatre that can be assembled and disassembled within 3 days, located inside Beit Al Shams in Sharjah. The design approach prioritized simplicity, flexibility and harmony with the existing architecture. To achieve this, I selected wood and fabric as the primary materials due to their ease of handling, lightweight nature, and compatibility with rapid construction. The components are mechanically joined, specifically with the traditional Chinese mortise-and-tenon technique, to join the wooden bars and stabilize the structure.\n\nThe theatre is based on a modular system using a 2×2 meter square unit. These units can be rearranged in many configurations, allowing artists and performers to adapt the space according to their specific performance needs. This flexibility enables the creation of multiple spatial prototypes.\n\nA critical design goal was to ensure that the theatre would blend seamlessly with the existing structure of Beit Al Shams — achieved not only through the choice of materials but also by considering the placement and orientation of the modular units. A pathway created from the base units connects the new structure to the original house, integrating the theatre both visually and functionally within its context. Ultimately the project seeks to create a dynamic and transformable performance space that respects and enhances its surroundings while offering performers and audiences a unique experience.',
     heroImage: im('modulable-theatre', 'hero', 800, 585, 'Modulable Theatre — courtyard render of the wood-and-fabric structure'),
-    conceptImage: 'render-01',
+    conceptImage: 'drawing-01',
+    conceptMatchHeight: true, // concept drawing fills the column to match the text height
     renders: [
       im('modulable-theatre', 'render-01', 640, 360, 'Modulable Theatre — aerial render in the courtyard'),
       im('modulable-theatre', 'render-02', 640, 360, 'Modulable Theatre — covered walkway render'),
@@ -170,9 +174,12 @@ export const projects = [
     ],
     drawings: [
       im('modulable-theatre', 'drawing-01', 484, 800, 'Modulable Theatre — module and joint details'),
-      im('modulable-theatre', 'drawing-02', 800, 369, 'Modulable Theatre — plan and elevations'),
+      im('modulable-theatre', 'drawing-04', 1600, 1491, 'Modulable Theatre — ground floor plan with courtyard and tiered seating'),
+      im('modulable-theatre', 'drawing-05', 1600, 1049, 'Modulable Theatre — colored elevations with level markers'),
+      im('modulable-theatre', 'drawing-06', 1600, 768, 'Modulable Theatre — building sections with level markers'),
       im('modulable-theatre', 'drawing-03', 800, 799, 'Modulable Theatre — spatial prototypes A–E'),
     ],
+    drawingsSingle: true, // stack drawings full-width, one per row
     featured: true,
   },
   {
@@ -188,7 +195,9 @@ export const projects = [
     description:
       'A neighborhood turned into ashes, a broken bond between a lost municipality and its people. A war has not only destroyed walls, it has tried to erase trust, to dissolve belonging, to fray the invisible fabric that unites citizens to their city. Therefore a question arises: how to re-establish the link between the neighborhood, the people, and the municipality? That is why my project is not simply about rebuilding roofs — it is about retracing this thread.\n\nThus, my project is not a simple response to ruins, but a living bridge between the inhabitants and their city: a continuity where the privacy of residential buildings dialogues with the transparency of the municipality. Where you can live and also be heard. Public spaces are designed to encourage exchange, transparency, and inclusion. Municipal buildings are no longer closed or isolated but blended into the life of the neighborhood — accessible, visible, human.\n\nThe answer I propose is an architecture that goes beyond its institutional function to become a tool of rapprochement, strengthening the relationship between people and government through a new municipality anchored in the heart of the urban fabric. The houses built around it are not only witnesses of repaired ties but the active climate of a new dialogue between the spatial and the social: from public spaces to meeting places. A renewed sense of belonging — architecture becomes a language of living together.',
     heroImage: im('municipality-of-nabatieh', 'hero', 640, 360, 'Municipality of Nabatieh — street-level urban render'),
-    conceptImage: 'render-01',
+    // Two drawings stacked beside the concept text: the aerial context model over
+    // the concept evolution diagram. (Both are dropped from the drawings gallery.)
+    conceptImages: ['drawing-01', 'drawing-02'],
     renders: [
       im('municipality-of-nabatieh', 'render-01', 640, 360, 'Municipality of Nabatieh — facade render at sunset'),
       im('municipality-of-nabatieh', 'render-02', 640, 360, 'Municipality of Nabatieh — public underpass render'),
@@ -239,9 +248,9 @@ export const projects = [
     drawings: [
       im('beirut-opera', 'drawing-01', 800, 611, 'Beirut Opera — site plan'),
       im('beirut-opera', 'drawing-02', 800, 611, 'Beirut Opera — roof plan'),
-      im('beirut-opera', 'drawing-03', 800, 611, 'Beirut Opera — sections'),
       im('beirut-opera', 'drawing-04', 800, 611, 'Beirut Opera — floor plan'),
       im('beirut-opera', 'drawing-05', 800, 611, 'Beirut Opera — floor plan'),
+      im('beirut-opera', 'drawing-03', 800, 611, 'Beirut Opera — sections'),
       im('beirut-opera', 'drawing-06', 800, 611, 'Beirut Opera — elevations'),
       im('beirut-opera', 'drawing-07', 800, 611, 'Beirut Opera — elevations'),
     ],
@@ -253,22 +262,33 @@ export const projects = [
 /** @param {string} slug */
 export const getProject = (slug) => projects.find((p) => p.slug === slug);
 
-// Concept image (project detail page): ONE image shown beside the concept prose.
-// Choose it per project via the optional `conceptImage` field, set to either:
-//   • an image NAME string — e.g. 'render-02', 'drawing-01', or 'hero'
-//   • a full im(...) object — for an image not otherwise in the project
-// Omit it to default to the first render. Whichever image is chosen is removed
-// from its gallery on the page so it never shows twice.
+// Concept image(s) (project detail page): shown beside the concept prose. Choose
+// per project via either:
+//   • `conceptImage`  — a single image (name string or im() object)
+//   • `conceptImages` — an array (stacked vertically beside the text)
+// Each entry is either an image NAME string ('render-02', 'drawing-01', 'hero')
+// or a full im(...) object (for an image not otherwise in the project). Omit both
+// to default to the first render. Whichever images are chosen are removed from
+// their galleries on the page so they never show twice.
 const nameOf = (img) => img.src.split('/').pop().replace(/\.[^.]+$/, '');
 
-/** @param {import('./types').Project} p */
-export const conceptImageFor = (p) => {
-  if (p.conceptImage && typeof p.conceptImage === 'object') return p.conceptImage;
-  if (typeof p.conceptImage === 'string') {
-    const found = [p.heroImage, ...p.renders, ...p.drawings].find((img) => nameOf(img) === p.conceptImage);
-    if (found) return found;
+// Resolve one concept reference (name string or im() object) to an image object.
+const resolveConcept = (p, ref) => {
+  if (ref && typeof ref === 'object') return ref;
+  if (typeof ref === 'string') {
+    return [p.heroImage, ...p.renders, ...p.drawings].find((img) => nameOf(img) === ref) || null;
   }
-  return p.renders[0] || p.heroImage || null;
+  return null;
+};
+
+/** The primary concept image (first one). @param {import('./types').Project} p */
+export const conceptImageFor = (p) => conceptImagesFor(p)[0] || null;
+
+/** All concept images, in display order. @param {import('./types').Project} p */
+export const conceptImagesFor = (p) => {
+  const refs = Array.isArray(p.conceptImages) && p.conceptImages.length ? p.conceptImages : [p.conceptImage];
+  const list = refs.map((ref) => resolveConcept(p, ref)).filter(Boolean);
+  return list.length ? list : [p.renders[0] || p.heroImage].filter(Boolean);
 };
 
 // Explicit editorial order for the Home featured section (ui-spec §4.6):
