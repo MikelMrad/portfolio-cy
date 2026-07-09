@@ -73,7 +73,7 @@ export default async function ProjectDetailPage({ params }) {
 
         {sheets.length ? (
           <div style={block}>
-            <ProjectGallery label="plans & axonometric" images={sheets} single />
+            <ProjectGallery label={project.sheetsLabel || 'plans'} images={sheets} single />
           </div>
         ) : null}
 

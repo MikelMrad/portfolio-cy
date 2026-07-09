@@ -27,6 +27,13 @@ const Media = styled('div')(({ theme }) => ({
 }));
 
 export default function ProjectConcept({ paragraphs, image }) {
+  // Tall/portrait images (e.g. a vertical concept sketch) would otherwise stretch
+  // to the full column width and become enormous. Cap their height to a logical
+  // size and let the width follow the aspect ratio, centered in the column.
+  const portrait = image && image.height > image.width;
+  const capStyle = portrait
+    ? { maxWidth: `calc(clamp(340px, 60vh, 600px) * ${(image.width / image.height).toFixed(4)})`, marginInline: 'auto' }
+    : undefined;
   return (
     <div>
       <SectionLabel>concept</SectionLabel>
@@ -40,8 +47,8 @@ export default function ProjectConcept({ paragraphs, image }) {
         </div>
         {image ? (
           <Media>
-            <Reveal>
-              <ImageFigure image={image} sizes="(min-width:900px) 40vw, 100vw" />
+            <Reveal style={capStyle}>
+              <ImageFigure image={image} sizes={portrait ? '(min-width:900px) 220px, 60vw' : '(min-width:900px) 40vw, 100vw'} />
             </Reveal>
           </Media>
         ) : null}

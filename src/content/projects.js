@@ -48,6 +48,7 @@ export const projects = [
     ],
     // Full-page floor plans (from PDFs), shown full-width below the concept text
     // in numeric order. See the `sheets` gallery on the project detail page.
+    sheetsLabel: 'plans & axonometric',
     sheets: [
       im('student-dorms', '1', 1600, 1132, 'Student Dorms — floor plan with study rooms, dining rooms and student rooms'),
       im('student-dorms', '2', 1600, 1132, 'Student Dorms — floor plan with lobbies, offices, study area and student rooms'),
@@ -70,14 +71,24 @@ export const projects = [
     description:
       'This project reimagines the municipality as an open and interactive civic space — a place that serves administrative functions while encouraging community engagement and a stronger connection to the city.\n\nLocated in Sodeco, a dynamic urban area, the design is based on openness, accessibility, and fluid interaction with the public realm. The sequence of sketches shows the transformation of a closed, inward-looking volume into a welcoming and inclusive urban form. By carving spaces out of the solid mass, the project opens toward the main street, creating a natural flow that invites people in. As the form evolves, an internal courtyard and pathways emerge, shaping green and social gathering spaces that are both visually and physically connected to the city.\n\nThe architecture reflects the main goal of the project: to draw people inward, encourage participation, and create moments of gathering and interaction. The municipality becomes a bridge between people, public life, and the urban context.',
     heroImage: im('municipality-of-beirut', 'hero', 640, 360, 'Municipality of Beirut — exterior render with vertical louvers and planting'),
-    conceptImage: 'render-01',
+    conceptImage: 'drawing-01',
     renders: [
       im('municipality-of-beirut', 'render-01', 800, 449, 'Municipality of Beirut — interior lounge render'),
       im('municipality-of-beirut', 'render-03', 640, 360, 'Municipality of Beirut — stone corridor render'),
       im('municipality-of-beirut', 'render-04', 560, 336, 'Municipality of Beirut — green wall interior render'),
+      im('municipality-of-beirut', 'render-05', 1600, 900, 'Municipality of Beirut — exterior render with wooden louver facade and entry plaza'),
+      im('municipality-of-beirut', 'render-06', 1280, 720, 'Municipality of Beirut — sunken courtyard render at sunset'),
+      im('municipality-of-beirut', 'render-07', 1280, 720, 'Municipality of Beirut — sunken courtyard and steps render with figures'),
+      im('municipality-of-beirut', 'render-08', 1280, 720, 'Municipality of Beirut — close-up render of the wooden louver facade'),
     ],
     drawings: [
       im('municipality-of-beirut', 'drawing-01', 170, 789, 'Municipality of Beirut — concept evolution sketch'),
+    ],
+    sheetsLabel: 'floor plans',
+    sheets: [
+      im('municipality-of-beirut', 'plan-01', 1415, 2000, 'Municipality of Beirut — floor plan with auditorium, foyer and public courtyard'),
+      im('municipality-of-beirut', 'plan-02', 1415, 2000, 'Municipality of Beirut — floor plan with offices, meeting rooms and courtyard'),
+      im('municipality-of-beirut', 'plan-03', 1415, 2000, 'Municipality of Beirut — floor plan with offices, archives and courtyard'),
     ],
     featured: true,
   },
@@ -101,6 +112,7 @@ export const projects = [
       im('convention-center', 'render-03', 640, 360, 'Convention Center — exterior render with lawn'),
       im('convention-center', 'render-04', 640, 360, 'Convention Center — communal courtyard render'),
       im('convention-center', 'render-05', 640, 360, 'Convention Center — entry plaza render'),
+      im('convention-center', 'render-06', 1600, 900, 'Convention Center — aerial render of the central green courtyard and terraces'),
     ],
     drawings: [
       im('convention-center', 'drawing-01', 699, 800, 'Convention Center — exploded axonometric'),
