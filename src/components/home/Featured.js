@@ -66,7 +66,6 @@ export default function Featured() {
   return (
     <>
       <Section tone="paper">
-        {/* TODO:featured-intro — draft */}
         <Reveal>
           <Type token="display2" as="p" style={{ maxWidth: '22ch' }}>
             Every project begins with understanding — observe before intervening, refine before adding.

@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Type from '@/components/ui/Type';
 import Reveal from '@/components/ui/Reveal';
 
-// Night belief statement over a full-bleed image + scrim (ui-spec §4.7). Draft — TODO:belief-line.
+// Night belief statement over a full-bleed image + scrim (ui-spec §4.7).
 const Root = styled('section')(({ theme }) => ({
   position: 'relative',
   minHeight: '70vh',
@@ -35,7 +35,7 @@ const Inner = styled('div')(({ theme }) => ({
 
 const beliefImage = {
   src: '/images/home/belief.svg',
-  alt: 'TODO: full-bleed atmospheric project image behind the belief statement',
+  alt: 'Full-bleed atmospheric architectural render behind the belief statement',
 };
 
 export default function Belief() {

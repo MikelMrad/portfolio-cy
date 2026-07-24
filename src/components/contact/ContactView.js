@@ -71,7 +71,7 @@ const FormCard = styled('div')(({ theme }) => ({
 
 const panelImage = {
   src: '/images/home/belief.svg',
-  alt: 'TODO: atmospheric project image for the contact panel',
+  alt: 'Atmospheric architectural render in the contact panel',
 };
 
 export default function ContactView() {

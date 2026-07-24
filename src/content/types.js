@@ -15,7 +15,7 @@
  * @property {string} slug            // kebab-case, stable, used in routes
  * @property {string} number          // '01'..'08' display index
  * @property {string} title
- * @property {number} year            // TODO:confirm-years
+ * @property {number} year
  * @property {string} academicContext // '2nd Year Project' | ... | 'Thesis Project'
  * @property {string} location        // 'Sodeco, Beirut'
  * @property {string[]} tools         // ['AutoCAD','Revit','Lumion']
@@ -47,7 +47,7 @@
 /**
  * @typedef {Object} SocialLink
  * @property {string} label  // 'LinkedIn'
- * @property {string} href   // TODO until confirmed — omit from render if href === '#'
+ * @property {string} href   // omit from render when unset (empty list hides the column)
  */
 
 /**
@@ -56,9 +56,9 @@
  * @property {string} wordmark    // 'cynthia nahra.'
  * @property {string} role        // 'Junior Architect'
  * @property {string} location    // 'Beirut, Lebanon'
- * @property {string} email       // 'cynthianohra11@gmail.com' TODO:confirm-email-spelling
+ * @property {string} email       // 'cynthianahra.work@gmail.com'
  * @property {string} phone       // '+961 81 726 981'
- * @property {string} education   // 'USJ — ESAR' TODO:confirm-school-label
+ * @property {string} education   // 'Saint-Joseph University of Beirut (USJ)'
  * @property {SocialLink[]} socials
  * @property {string[]} tools     // ToolsStrip
  */

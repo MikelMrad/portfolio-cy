@@ -28,8 +28,7 @@ export const projects = [
     slug: 'student-dorms',
     number: '01',
     title: 'Student Dorms',
-    year: 2023, // derived from 2nd Year Project — TODO:confirm-years
-    academicContext: '2nd Year Project',
+    year: 2023, // derived from 2nd Year Project    academicContext: '2nd Year Project',
     location: 'Mansourieh, Lebanon',
     tools: ['SketchUp', 'Revit', 'Lumion'],
     categories: ['Residential', 'Education'],
@@ -62,8 +61,7 @@ export const projects = [
     slug: 'municipality-of-beirut',
     number: '02',
     title: 'Municipality of Beirut',
-    year: 2024, // derived from 3rd Year Project — TODO:confirm-years
-    academicContext: '3rd Year Project',
+    year: 2024, // derived from 3rd Year Project    academicContext: '3rd Year Project',
     location: 'Sodeco, Beirut',
     tools: ['SketchUp', 'AutoCAD', 'Lumion'],
     categories: ['Civic', 'Urban'],
@@ -97,8 +95,7 @@ export const projects = [
     slug: 'convention-center',
     number: '03',
     title: 'Convention Center',
-    year: 2024, // derived from 3rd Year Project — TODO:confirm-years
-    academicContext: '3rd Year Project',
+    year: 2024, // derived from 3rd Year Project    academicContext: '3rd Year Project',
     location: 'Sodeco, Beirut',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Civic', 'Hospitality'],
@@ -124,8 +121,7 @@ export const projects = [
     slug: 'affordable-housing',
     number: '04',
     title: 'Affordable Housing',
-    year: 2025, // derived from 4th Year Project — TODO:confirm-years
-    academicContext: '4th Year Project',
+    year: 2025, // derived from 4th Year Project    academicContext: '4th Year Project',
     location: 'Adlieh, Beirut',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Residential'],
@@ -155,8 +151,7 @@ export const projects = [
     slug: 'modulable-theatre',
     number: '05',
     title: 'Modulable Theatre',
-    year: 2025, // derived from 4th Year Project — TODO:confirm-years
-    academicContext: '4th Year Project',
+    year: 2025, // derived from 4th Year Project    academicContext: '4th Year Project',
     location: 'Beit Al Shams, Sharjah, UAE',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Cultural', 'Temporary'],
@@ -186,8 +181,7 @@ export const projects = [
     slug: 'municipality-of-nabatieh',
     number: '06',
     title: 'Municipality of Nabatieh',
-    year: 2025, // derived from 4th Year Project — TODO:confirm-years
-    academicContext: '4th Year Project',
+    year: 2025, // derived from 4th Year Project    academicContext: '4th Year Project',
     location: 'Nabatieh, Lebanon',
     tools: ['AutoCAD', 'Revit', 'Lumion', 'Photoshop'],
     categories: ['Civic', 'Urban'],
@@ -221,8 +215,7 @@ export const projects = [
     slug: 'beirut-opera',
     number: '07',
     title: 'Beirut Opera',
-    year: 2026, // Final Year Project — TODO:confirm-years
-    academicContext: 'Final Year Project',
+    year: 2026, // Final Year Project    academicContext: 'Final Year Project',
     location: 'Beirut Waterfront, Lebanon',
     tools: ['AutoCAD', 'Revit', 'Lumion', 'Photoshop'],
     categories: ['Cultural', 'Civic'],

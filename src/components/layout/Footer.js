@@ -99,7 +99,6 @@ export default function Footer() {
     <Root>
       <Inner>
         <Top>
-          {/* TODO:footer-line — draft closing line */}
           <ClosingLine>Designing with context.</ClosingLine>
           <Columns>
             <Column as="nav" aria-label="Footer">

@@ -15,7 +15,7 @@ import { latestProject } from '@/content/projects';
 // posterizes it).
 const heroImage = {
   src: '/images/home/hero.webp',
-  alt: 'TODO: home hero background image',
+  alt: 'Architectural project render behind the site introduction',
 };
 
 const Root = styled('section')(({ theme }) => ({
@@ -118,7 +118,6 @@ export default function Hero() {
             Architectural <em>Portfolio</em>
           </Type>
         </Rise>
-        {/* TODO:hero-intro — draft */}
         <Rise step={2}>
           <Type token="body" as="p" sx={{ maxWidth: '62ch', opacity: 0.9, marginTop: 24 }}>
             Junior architect based in {site.location}, designing civic, cultural and residential spaces rooted in their context.

@@ -41,7 +41,6 @@ export default function AboutView() {
       <HeaderSpacer />
       <Section tone="paper">
         <SectionLabel>about</SectionLabel>
-        {/* TODO:about-headline — draft */}
         <Type token="display3" as="h1" style={{ maxWidth: '18ch' }}>
           Crafting spaces that respond to people and place.
         </Type>

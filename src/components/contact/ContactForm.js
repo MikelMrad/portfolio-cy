@@ -132,7 +132,7 @@ export default function ContactForm() {
         sx={fieldSx}
       />
 
-      {!configured ? <Notice>TODO: configure EmailJS env (NEXT_PUBLIC_EMAILJS_*) to enable sending.</Notice> : null}
+      {!configured ? <Notice>The contact form isn’t set up yet — please reach out by email or phone.</Notice> : null}
 
       {done ? (
         <Notice role="status">{t('contact.success')}</Notice>

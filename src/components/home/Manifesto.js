@@ -3,7 +3,7 @@ import Section from '@/components/layout/Section';
 import Reveal from '@/components/ui/Reveal';
 import Type from '@/components/ui/Type';
 
-// Paper manifesto statement (ui-spec §4.2). Draft copy — TODO:manifesto.
+// Paper manifesto statement (ui-spec §4.2).
 export default function Manifesto() {
   return (
     <Section tone="paper">

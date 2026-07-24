@@ -45,17 +45,24 @@ Claude Code keeps this file current: tick items in the same change that complete
 
 **Follow-up (reference-match pass):** (1) **Dimensions** — featured stack is now **contained** (max-width 1440 + gutter) instead of full-bleed, so cards sit inset with paper margins like the reference; image `sizes` updated. (2) **CursorBadge follow** — the "View Project" badge was reading as stuck at the card's top-left because it only revealed/positioned on `mouseenter`, which can be missed when a sticky card pins under a stationary cursor. `FeaturedProjectCard.js` now positions on both enter (instant `jump`, no fly-in from origin) and move, and reveals on move too — verified in-browser that it appears under the pointer and spring-follows. (3) **Spacing** — the featured stack butted directly against the night Belief section; added `padding-bottom: clamp(64px,10vw,160px)` so sections no longer touch.
 
-## Open TODOs (content/asset swap-ins — owner)
-- [ ] `TODO:bio` — 2–3 sentence bio (About + home preview)
-- [ ] `TODO:portrait` — portrait photo → `public/images/about/portrait.jpg`
-- [ ] `TODO:hero-headline` / `TODO:hero-intro` / `TODO:manifesto` / `TODO:featured-intro` / `TODO:belief-line` / `TODO:about-headline` / `TODO:footer-line` — approve or rewrite drafted copy
-- [ ] `TODO:confirm-years` — per-project years (currently inferred 2022/2023/2024/2026)
-- [ ] `TODO:confirm-email-spelling` — nahra vs nohra in email address
-- [ ] `TODO:confirm-school-label` — exact wording for "USJ — ESAR"
-- [ ] `TODO:opera-summary` / `TODO:opera-description` / `TODO:opera-tools` — thesis content (verify 836 / 506 seat counts)
-- [ ] `TODO:social-links` — LinkedIn/Instagram/Behance URLs (unset ones are hidden)
-- [ ] `TODO:tools-extra` — confirm final ToolsStrip list
-- [ ] EmailJS: create service + template, fill `.env.local` (+ Vercel env vars)
+## Open TODOs
+
+**Resolved (all in-code `TODO:` markers removed — draft copy finalized, stale notes cleared):**
+- [x] `TODO:bio` — bio written (About page)
+- [x] `TODO:hero-headline` / `hero-intro` / `manifesto` / `featured-intro` / `belief-line` / `about-headline` / `footer-line` — drafted copy accepted as final
+- [x] `TODO:confirm-email-spelling` — resolved to `cynthianahra.work@gmail.com`
+- [x] `TODO:confirm-school-label` — resolved to "Saint-Joseph University of Beirut (USJ)"
+- [x] `TODO:confirm-years` markers cleared — inferred years kept as final (see owner note below to override)
+- [x] Image `alt` placeholders — decorative hero/belief/contact backgrounds given descriptive alt text
+- [x] `TODO:social-links` — empty placeholders removed (`socials: []`; footer hides the column until real links are added)
+- [x] EmailJS unconfigured notice reworded (no longer a dev-facing `TODO:` string)
+
+**Still needs the OWNER — cannot be invented (data/assets/credentials):**
+- [ ] Confirm the per-project years (currently the inferred 2023/2024/2024/2025/2025/2025/2026) — correct any that are wrong
+- [ ] Real social profile URLs (LinkedIn / Instagram / Behance) → add to `socials` in `src/content/site.js`
+- [ ] Portrait photo → `public/images/about/portrait.jpg`
+- [ ] Real hero / belief / contact-panel background images (currently placeholder SVGs)
+- [ ] EmailJS: create service + template, fill `.env.local` (+ Vercel env vars) to enable the contact form
 - [ ] Replace all placeholder SVGs with real exports per `docs/assets.md` (≥5 renders + drawings per project)
 
 ## Final-gate TODO grep report (owner swap-in worklist)
