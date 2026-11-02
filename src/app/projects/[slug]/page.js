@@ -107,6 +107,7 @@ export default async function ProjectDetailPage({ params }) {
           location={project.location}
           tools={project.tools}
           categories={project.categories}
+          published={project.published}
         />
       ),
     },

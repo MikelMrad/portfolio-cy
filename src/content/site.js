@@ -12,7 +12,10 @@ export const site = {
   education: 'Saint-Joseph University of Beirut (USJ)', // Architecture Diploma, 2021–2026
   // Add real profiles when confirmed, e.g. { label: 'LinkedIn', href: 'https://…' }.
   // The footer renders only entries with a real href, so an empty list hides the column.
-  socials: [{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/cynthia-nahra/' }],
+  socials: [
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/cynthia-nahra/' },
+    { label: 'Archello', href: 'https://archello.com/brand/cynthia-nahra' },
+  ],
   cv: { href: '/files/Cynthia-Nahra-CV.pdf', size: 'PDF, 112 KB' }, // public/files
   credit: { name: 'Mikel Mrad', href: 'https://mikelmrad.dev' }, // footer "Site by"
   tools: ['AutoCAD', 'Revit', 'Lumion', 'SketchUp', 'Photoshop', 'InDesign'],

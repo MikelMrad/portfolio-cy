@@ -149,6 +149,7 @@ export const projects = [
       im('affordable-housing', 'drawing-03', 715, 720, 'Affordable Housing — elevations and sections'),
     ],
     drawingsSingle: true, // stack drawings full-width, one per row
+    published: [{ label: 'Archello', href: 'https://archello.com/project/affordable-housing' }],
     featured: false,
   },
   {

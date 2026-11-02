@@ -34,6 +34,7 @@
  * @property {boolean} [drawingsSingle] // stack the drawings gallery full-width, one per row
  * @property {boolean} featured
  * @property {boolean} [latest]       // exactly one project: hero mini-card target
+ * @property {{ label: string, href: string }[]} [published] // external publications of this project
  * @property {string} [relatedSlug]   // e.g. execution-drawings <-> convention-center
  */
 
