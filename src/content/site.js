@@ -11,5 +11,6 @@ export const site = {
   // The footer renders only entries with a real href, so an empty list hides the column.
   socials: [],
   cv: { href: '/files/Cynthia-Nahra-CV.pdf', size: 'PDF, 112 KB' }, // public/files
+  credit: { name: 'Mikel Mrad', href: 'https://mikelmrad.dev' }, // footer "Site by"
   tools: ['AutoCAD', 'Revit', 'Lumion', 'SketchUp', 'Photoshop', 'InDesign'],
 };

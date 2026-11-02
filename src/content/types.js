@@ -61,6 +61,7 @@
  * @property {string} education   // 'Saint-Joseph University of Beirut (USJ)'
  * @property {SocialLink[]} socials
  * @property {{ href: string, size: string }} cv // downloadable CV (About page)
+ * @property {{ name: string, href: string }} credit // footer site credit
  * @property {string[]} tools     // ToolsStrip
  */
 

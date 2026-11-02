@@ -43,6 +43,7 @@ const en = {
     pagesTitle: 'Pages',
     socialTitle: 'Social',
     rights: 'All rights reserved.',
+    siteBy: 'Site by',
     backHome: 'Back home',
   },
   notFound: {

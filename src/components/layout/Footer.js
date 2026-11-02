@@ -127,6 +127,16 @@ const Legal = styled('div')(({ theme }) => ({
   marginTop: 24,
 }));
 
+// Designer credit: same caption size, brighter, underline on hover.
+const CreditLink = styled('a')(({ theme }) => ({
+  color: theme.custom.colors.nightLabel,
+  textDecoration: 'underline',
+  textDecorationColor: 'rgba(255,255,255,0.3)',
+  textUnderlineOffset: '0.2em',
+  transition: `text-decoration-color ${theme.custom.motion.durations.fast}s ${theme.custom.motion.ease}`,
+  '&:hover': { textDecorationColor: 'currentColor' },
+}));
+
 // Live Beirut clock, minute precision. Empty on the server (no hydration mismatch).
 const formatTime = () =>
   new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Beirut', hour: '2-digit', minute: '2-digit' }).format(new Date());
@@ -238,7 +248,12 @@ export default function Footer() {
           <span>
             © {year} {site.name}. {t('footer.rights')}
           </span>
-          <span>{site.location}</span>
+          <span>
+            {t('footer.siteBy')}{' '}
+            <CreditLink href={site.credit.href} target="_blank" rel="noopener noreferrer">
+              {site.credit.name}
+            </CreditLink>
+          </span>
         </Legal>
       </Inner>
     </Root>

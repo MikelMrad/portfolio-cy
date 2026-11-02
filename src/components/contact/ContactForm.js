@@ -91,7 +91,15 @@ export default function ContactForm() {
       await emailjs.send(
         SERVICE,
         TEMPLATE,
-        { from_name: values.fullName, reply_to: values.email, message: values.message },
+        // Variable names match the EmailJS "Contact Us" template: {{name}}, {{email}}
+        // (its Reply To), {{title}} (in the subject), {{time}} and {{message}}.
+        {
+          name: values.fullName,
+          email: values.email,
+          title: `new message from ${values.fullName}`,
+          time: new Date().toLocaleString('en-GB', { timeZone: 'Asia/Beirut', dateStyle: 'medium', timeStyle: 'short' }),
+          message: values.message,
+        },
         { publicKey: PUBLIC_KEY }
       );
       setStatus('success');
