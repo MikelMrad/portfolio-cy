@@ -60,6 +60,7 @@
  * @property {string} phone       // '+961 81 726 981'
  * @property {string} education   // 'Saint-Joseph University of Beirut (USJ)'
  * @property {SocialLink[]} socials
+ * @property {{ href: string, size: string }} cv // downloadable CV (About page)
  * @property {string[]} tools     // ToolsStrip
  */
 

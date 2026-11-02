@@ -28,7 +28,8 @@ export const projects = [
     slug: 'student-dorms',
     number: '01',
     title: 'Student Dorms',
-    year: 2023, // derived from 2nd Year Project    academicContext: '2nd Year Project',
+    year: 2023, // derived from 2nd Year Project
+    academicContext: '2nd Year Project',
     location: 'Mansourieh, Lebanon',
     tools: ['SketchUp', 'Revit', 'Lumion'],
     categories: ['Residential', 'Education'],
@@ -55,13 +56,14 @@ export const projects = [
       im('student-dorms', '4', 1600, 1132, 'Student Dorms — amenities floor plan: restaurant, library, gym, pool and sports courts'),
       im('student-dorms', 'axo-s5', 1131, 1600, 'Student Dorms — exploded axonometric of the stacked levels'),
     ],
-    featured: false,
+    featured: true,
   },
   {
     slug: 'municipality-of-beirut',
     number: '02',
     title: 'Municipality of Beirut',
-    year: 2024, // derived from 3rd Year Project    academicContext: '3rd Year Project',
+    year: 2024, // derived from 3rd Year Project
+    academicContext: '3rd Year Project',
     location: 'Sodeco, Beirut',
     tools: ['SketchUp', 'AutoCAD', 'Lumion'],
     categories: ['Civic', 'Urban'],
@@ -89,13 +91,14 @@ export const projects = [
       im('municipality-of-beirut', 'plan-02', 1415, 2000, 'Municipality of Beirut — floor plan with offices, meeting rooms and courtyard'),
       im('municipality-of-beirut', 'plan-03', 1415, 2000, 'Municipality of Beirut — floor plan with offices, archives and courtyard'),
     ],
-    featured: true,
+    featured: false,
   },
   {
     slug: 'convention-center',
     number: '03',
     title: 'Convention Center',
-    year: 2024, // derived from 3rd Year Project    academicContext: '3rd Year Project',
+    year: 2024, // derived from 3rd Year Project
+    academicContext: '3rd Year Project',
     location: 'Sodeco, Beirut',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Civic', 'Hospitality'],
@@ -121,7 +124,8 @@ export const projects = [
     slug: 'affordable-housing',
     number: '04',
     title: 'Affordable Housing',
-    year: 2025, // derived from 4th Year Project    academicContext: '4th Year Project',
+    year: 2025, // derived from 4th Year Project
+    academicContext: '4th Year Project',
     location: 'Adlieh, Beirut',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Residential'],
@@ -151,7 +155,8 @@ export const projects = [
     slug: 'modulable-theatre',
     number: '05',
     title: 'Modulable Theatre',
-    year: 2025, // derived from 4th Year Project    academicContext: '4th Year Project',
+    year: 2025, // derived from 4th Year Project
+    academicContext: '4th Year Project',
     location: 'Beit Al Shams, Sharjah, UAE',
     tools: ['AutoCAD', 'Revit', 'Lumion'],
     categories: ['Cultural', 'Temporary'],
@@ -175,13 +180,14 @@ export const projects = [
       im('modulable-theatre', 'drawing-03', 800, 799, 'Modulable Theatre — spatial prototypes A–E'),
     ],
     drawingsSingle: true, // stack drawings full-width, one per row
-    featured: true,
+    featured: false,
   },
   {
     slug: 'municipality-of-nabatieh',
     number: '06',
     title: 'Municipality of Nabatieh',
-    year: 2025, // derived from 4th Year Project    academicContext: '4th Year Project',
+    year: 2025, // derived from 4th Year Project
+    academicContext: '4th Year Project',
     location: 'Nabatieh, Lebanon',
     tools: ['AutoCAD', 'Revit', 'Lumion', 'Photoshop'],
     categories: ['Civic', 'Urban'],
@@ -209,13 +215,14 @@ export const projects = [
       im('municipality-of-nabatieh', 'drawing-05', 600, 720, 'Municipality of Nabatieh — site plan'),
       im('municipality-of-nabatieh', 'drawing-06', 699, 720, 'Municipality of Nabatieh — sections and elevations'),
     ],
-    featured: false,
+    featured: true,
   },
   {
     slug: 'beirut-opera',
     number: '07',
     title: 'Beirut Opera',
-    year: 2026, // Final Year Project    academicContext: 'Final Year Project',
+    year: 2026, // Final Year Project
+    academicContext: 'Final Year Project',
     location: 'Beirut Waterfront, Lebanon',
     tools: ['AutoCAD', 'Revit', 'Lumion', 'Photoshop'],
     categories: ['Cultural', 'Civic'],
@@ -285,8 +292,8 @@ export const conceptImagesFor = (p) => {
 };
 
 // Explicit editorial order for the Home featured section (ui-spec §4.6):
-// Beirut Opera → Municipality of Beirut → Modulable Theatre.
-export const featuredProjects = ['beirut-opera', 'municipality-of-beirut', 'modulable-theatre']
+// Beirut Opera → Student Dorms → Municipality of Nabatieh.
+export const featuredProjects = ['beirut-opera', 'student-dorms', 'municipality-of-nabatieh']
   .map(getProject)
   .filter(Boolean);
 

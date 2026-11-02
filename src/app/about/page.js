@@ -1,5 +1,4 @@
 import AboutView from '@/components/about/AboutView';
-import ContactCTA from '@/components/ui/ContactCTA';
 import { site } from '@/content/site';
 
 export const metadata = {
@@ -8,10 +7,5 @@ export const metadata = {
 };
 
 export default function AboutPage() {
-  return (
-    <>
-      <AboutView />
-      <ContactCTA />
-    </>
-  );
+  return <AboutView />;
 }

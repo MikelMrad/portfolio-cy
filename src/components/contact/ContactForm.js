@@ -1,8 +1,8 @@
 'use client';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import emailjs from '@emailjs/browser';
-import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
+import Button from '@/components/ui/Button';
 import { t } from '@/content/i18n';
 
 const SERVICE = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
@@ -12,45 +12,60 @@ const configured = Boolean(SERVICE && TEMPLATE && PUBLIC_KEY);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const SubmitButton = styled('button')(({ theme }) => {
+const FieldWrap = styled('div')({ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 20 });
+
+const Label = styled('label')(({ theme }) => ({
+  ...theme.custom.type.label,
+  fontWeight: 600,
+  color: theme.custom.colors.label,
+}));
+
+// Rounded, filled text field. Error state via aria-invalid.
+const inputStyles = (theme) => {
   const c = theme.custom.colors;
-  const m = theme.custom.motion;
   return {
-    ...theme.custom.type.label,
+    ...theme.custom.type.body,
     width: '100%',
-    marginTop: 28,
-    padding: '18px 20px',
-    display: 'inline-flex',
-    justifyContent: 'center',
-    gap: 8,
-    backgroundColor: c.ink,
-    color: c.snow,
-    border: `1px solid ${c.ink}`,
-    cursor: 'pointer',
-    transition: `background-color ${m.durations.reduced}s ${m.ease}, color ${m.durations.reduced}s ${m.ease}`,
-    '&:hover:not(:disabled)': { backgroundColor: c.paper, color: c.ink },
+    minHeight: 48,
+    padding: '12px 16px',
+    borderRadius: theme.custom.radius.control,
+    border: `1px solid ${c.separator}`,
+    backgroundColor: c.tile,
+    color: c.label,
+    transition: `border-color ${theme.custom.motion.durations.fast}s ${theme.custom.motion.ease}`,
+    '&::placeholder': { color: c.label2 },
+    '&:hover:not(:disabled)': { borderColor: c.label2 },
+    '&:focus-visible': { outline: `2px solid ${c.label}`, outlineOffset: 1, borderColor: 'transparent' },
+    '&[aria-invalid="true"]': { borderColor: c.danger },
     '&:disabled': { opacity: 0.5, cursor: 'not-allowed' },
-    '&:focus-visible': { outline: `2px solid ${c.ink}`, outlineOffset: 4 },
   };
-});
+};
+const Input = styled('input')(({ theme }) => inputStyles(theme));
+const TextArea = styled('textarea')(({ theme }) => ({ ...inputStyles(theme), resize: 'vertical', minHeight: 140 }));
+
+const ErrorText = styled('p')(({ theme }) => ({ ...theme.custom.type.label, color: theme.custom.colors.danger, margin: 0 }));
 
 const Notice = styled('p', { shouldForwardProp: (p) => p !== 'variant' })(({ theme, variant }) => ({
   ...theme.custom.type.label,
   marginTop: 20,
-  color: variant === 'error' ? theme.palette.error.main : theme.custom.colors.inkMuted,
+  marginBottom: 0,
+  color: variant === 'error' ? theme.custom.colors.danger : theme.custom.colors.label2,
 }));
 
-const fieldSx = (theme) => ({
-  marginTop: 12,
-  '& .MuiInputLabel-root': { ...theme.custom.type.label, color: theme.custom.colors.inkMuted },
-  '& .MuiInputLabel-root.Mui-focused': { color: theme.custom.colors.ink },
-  '& .MuiInput-root:before': { borderBottomColor: theme.custom.colors.lineLight },
-  '& .MuiInput-root:hover:not(.Mui-disabled):before': { borderBottomColor: theme.custom.colors.inkMuted },
-  '& .MuiInput-root:after': { borderBottomColor: theme.custom.colors.ink },
-  '& .MuiInput-input': { ...theme.custom.type.body, paddingBlock: 10 },
-});
+function Field({ id, label, error, multiline, ...props }) {
+  const errId = `${id}-error`;
+  const Control = multiline ? TextArea : Input;
+  return (
+    <FieldWrap>
+      <Label htmlFor={id}>{label}</Label>
+      <Control id={id} aria-invalid={error ? 'true' : undefined} aria-describedby={error ? errId : undefined} {...props} />
+      {error ? <ErrorText id={errId}>{error}</ErrorText> : null}
+    </FieldWrap>
+  );
+}
 
 export default function ContactForm() {
+  const uid = useId();
   const [values, setValues] = useState({ fullName: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
@@ -91,56 +106,51 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate>
-      <TextField
-        fullWidth
-        variant="standard"
+      <Field
+        id={`${uid}-name`}
         label={t('contact.fullName')}
         value={values.fullName}
         onChange={setField('fullName')}
-        error={Boolean(errors.fullName)}
-        helperText={errors.fullName || ' '}
+        error={errors.fullName}
         disabled={disabled}
         autoComplete="name"
-        slotProps={{ htmlInput: { autoCapitalize: 'words' } }}
-        sx={fieldSx}
+        autoCapitalize="words"
       />
-      <TextField
-        fullWidth
+      <Field
+        id={`${uid}-email`}
         type="email"
-        variant="standard"
         label={t('contact.email')}
         value={values.email}
         onChange={setField('email')}
-        error={Boolean(errors.email)}
-        helperText={errors.email || ' '}
+        error={errors.email}
         disabled={disabled}
         autoComplete="email"
-        slotProps={{ htmlInput: { inputMode: 'email', autoCapitalize: 'none', autoCorrect: 'off', spellCheck: false } }}
-        sx={fieldSx}
+        inputMode="email"
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
       />
-      <TextField
-        fullWidth
+      <Field
+        id={`${uid}-message`}
         multiline
-        minRows={4}
-        variant="standard"
+        rows={5}
         label={t('contact.message')}
         value={values.message}
         onChange={setField('message')}
-        error={Boolean(errors.message)}
-        helperText={errors.message || ' '}
+        error={errors.message}
         disabled={disabled}
-        sx={fieldSx}
       />
 
-      {!configured ? <Notice>The contact form isn’t set up yet — please reach out by email or phone.</Notice> : null}
+      {!configured ? <Notice>The contact form isn’t set up yet. Please reach out by email or phone.</Notice> : null}
 
       {done ? (
         <Notice role="status">{t('contact.success')}</Notice>
       ) : (
-        <SubmitButton type="submit" disabled={disabled}>
-          {busy ? t('contact.sending') : t('contact.send')}
-          {!busy ? <span aria-hidden="true">↗</span> : null}
-        </SubmitButton>
+        <div style={{ marginTop: 28 }}>
+          <Button type="submit" disabled={disabled} style={{ width: '100%' }}>
+            {busy ? t('contact.sending') : t('contact.send')}
+          </Button>
+        </div>
       )}
 
       {status === 'error' ? (

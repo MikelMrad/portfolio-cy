@@ -1,3 +1,5 @@
+> **Superseded (2026-11-02).** The site was redesigned in an Apple product-page style: system SF font stack (Inter fallback), monochrome palette as CSS variables that follow the OS light/dark setting, frosted global nav with inline links, rounded tiles, sticky local nav on project pages, native scrolling (Lenis and the cursor badge removed). Tokens now live in `src/theme/theme.js` + `src/app/globals.css`; `/style-guide` shows them live. The checklist below records the previous Archevo direction.
+
 # Design Direction — locked decisions & checklist
 
 Screenshots of the Archevo reference are ground truth. Where this doc and screenshots conflict, **screenshots win**. Claude Code ticks each `- [ ]` when the decision is implemented and visually verified against the screenshots.

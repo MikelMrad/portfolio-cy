@@ -10,5 +10,6 @@ export const site = {
   // Add real profiles when confirmed, e.g. { label: 'LinkedIn', href: 'https://…' }.
   // The footer renders only entries with a real href, so an empty list hides the column.
   socials: [],
+  cv: { href: '/files/Cynthia-Nahra-CV.pdf', size: 'PDF, 112 KB' }, // public/files
   tools: ['AutoCAD', 'Revit', 'Lumion', 'SketchUp', 'Photoshop', 'InDesign'],
 };

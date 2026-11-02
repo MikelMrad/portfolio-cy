@@ -1,16 +1,17 @@
 'use client';
 import { styled, useTheme } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
 import Section from '@/components/layout/Section';
-import HeaderSpacer from '@/components/layout/HeaderSpacer';
 import SectionLabel from '@/components/ui/SectionLabel';
 import TextLink from '@/components/ui/TextLink';
+import Button from '@/components/ui/Button';
 import Type from '@/components/ui/Type';
 import Hairline from '@/components/ui/Hairline';
 import CategoryChip from '@/components/ui/CategoryChip';
 import YearChip from '@/components/ui/YearChip';
+import SpecList from '@/components/ui/SpecList';
 
-// Live style guide — reads every value from theme.js (no copied literals). noindex.
+// Live style guide: reads every value from theme.js (no copied literals). noindex.
+// Toggle the OS appearance to check both light and dark tokens.
 const Block = styled('div')({ marginTop: 'clamp(48px, 7vw, 88px)' });
 
 const Swatches = styled('div')({
@@ -22,151 +23,160 @@ const Swatches = styled('div')({
 
 const DarkBox = styled('div')(({ theme }) => ({
   position: 'relative',
-  minHeight: 160,
+  marginTop: 12,
+  borderRadius: theme.custom.radius.card,
   backgroundColor: theme.custom.colors.night,
-  color: theme.custom.colors.snow,
+  color: theme.custom.colors.nightLabel,
   padding: 24,
   display: 'flex',
-  flexDirection: 'column',
-  gap: 16,
-  justifyContent: 'flex-end',
+  flexWrap: 'wrap',
+  gap: 12,
+  alignItems: 'center',
 }));
 
-const Row = styled('div')({ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', marginTop: 16 });
+const Row = styled('div')({ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', marginTop: 12 });
+
+const Caption = ({ children }) => (
+  <Type token="label" as="p" muted>
+    {children}
+  </Type>
+);
 
 export default function StyleGuideClient() {
   const theme = useTheme();
-  const { colors, type, motion, layout } = theme.custom;
-  const spacing = [8, 16, 24, 32, 48, 64, 96, 160];
+  const { colors, type, motion, layout, radius } = theme.custom;
 
   return (
-    <>
-      <HeaderSpacer />
-      <Section tone="paper">
-        <SectionLabel>style guide</SectionLabel>
-        <Type token="display3" as="h1">
-          Design tokens & components
+    <Section tone="paper">
+      <SectionLabel>Style guide</SectionLabel>
+      <Type token="display2" as="h1">
+        Design tokens and components
+      </Type>
+
+      <Block>
+        <Type token="display3" as="h2">
+          Color
         </Type>
-
-        {/* Palette */}
-        <Block>
-          <Type token="hSmall" as="h2">
-            Palette
-          </Type>
-          <Swatches>
-            {Object.entries(colors).map(([name, value]) => (
-              <div key={name}>
-                <div style={{ height: 80, background: value, border: `1px solid ${colors.lineLight}` }} />
-                <div style={{ ...type.label, marginTop: 8 }}>{name}</div>
-                <div style={{ ...type.label, color: colors.inkMuted }}>{value}</div>
-              </div>
-            ))}
-          </Swatches>
-        </Block>
-
-        {/* Type ramp */}
-        <Block>
-          <Type token="hSmall" as="h2">
-            Type ramp
-          </Type>
-          {Object.entries(type).map(([name, style]) => (
-            <div key={name} style={{ marginTop: 24, overflow: 'hidden' }}>
-              <div style={{ ...type.label, color: colors.inkMuted }}>{name}</div>
-              <div style={style}>{name} — The quick brown fox</div>
+        <Swatches>
+          {Object.entries(colors).map(([name, value]) => (
+            <div key={name}>
+              <div style={{ height: 72, background: value, borderRadius: 12, border: `1px solid ${colors.separator}` }} />
+              <div style={{ ...type.label, marginTop: 8 }}>{name}</div>
+              <div style={{ ...type.caption, color: colors.label2 }}>{value}</div>
             </div>
           ))}
-        </Block>
+        </Swatches>
+      </Block>
 
-        {/* Spacing + layout */}
-        <Block>
-          <Type token="hSmall" as="h2">
-            Spacing & layout
-          </Type>
-          <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {spacing.map((s) => (
-              <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <span style={{ ...type.label, color: colors.inkMuted, width: 48 }}>{s}</span>
-                <span style={{ height: 16, width: s, background: colors.ink }} />
+      <Block>
+        <Type token="display3" as="h2">
+          Type
+        </Type>
+        {Object.entries(type).map(([name, style]) => (
+          <div key={name} style={{ marginTop: 24, overflow: 'hidden' }}>
+            <Caption>{name}</Caption>
+            <div style={style}>The quick brown fox</div>
+          </div>
+        ))}
+      </Block>
+
+      <Block>
+        <Type token="display3" as="h2">
+          Layout, radius and motion
+        </Type>
+        <Row>
+          {Object.entries(radius).map(([name, r]) => (
+            <div key={name} style={{ textAlign: 'center' }}>
+              <div style={{ width: 96, height: 64, borderRadius: Math.min(r, 32), background: colors.fill }} />
+              <div style={{ ...type.caption, color: colors.label2, marginTop: 6 }}>
+                {name} {r}
               </div>
-            ))}
-          </div>
-          <div style={{ ...type.label, color: colors.inkMuted, marginTop: 24 }}>
-            maxWidth {layout.maxWidth} · gutter {layout.gutter} · sectionPad {layout.sectionPad} · header {layout.header.xs}/{layout.header.md}
-          </div>
-        </Block>
-
-        {/* Motion */}
-        <Block>
-          <Type token="hSmall" as="h2">
-            Motion
-          </Type>
-          <div style={{ ...type.label, color: colors.inkMuted, marginTop: 16 }}>
-            ease {motion.ease} · stagger {motion.stagger}s · revealOffset {motion.revealOffset}px · durations{' '}
+            </div>
+          ))}
+        </Row>
+        <div style={{ marginTop: 24 }}>
+          <Caption>
+            maxWidth {layout.maxWidth} · wide {layout.wideMaxWidth} · gutter {layout.gutter} · sectionPad {layout.sectionPad} · nav{' '}
+            {layout.header} · nav clearance {layout.navClearance}
+          </Caption>
+          <Caption>
+            ease {motion.ease} ·{' '}
             {Object.entries(motion.durations)
               .map(([k, v]) => `${k} ${v}s`)
               .join(' · ')}
-          </div>
-        </Block>
+          </Caption>
+        </div>
+      </Block>
 
-        {/* Components */}
-        <Block>
-          <Type token="hSmall" as="h2">
-            Components
-          </Type>
+      <Block>
+        <Type token="display3" as="h2">
+          Components
+        </Type>
 
-          <div style={{ marginTop: 24 }}>
-            <div style={{ ...type.label, color: colors.inkMuted }}>SectionLabel (paper / night)</div>
-            <SectionLabel>paper label</SectionLabel>
-            <DarkBox style={{ minHeight: 0 }}>
-              <SectionLabel tone="night">night label</SectionLabel>
-            </DarkBox>
-          </div>
+        <div style={{ marginTop: 24 }}>
+          <Caption>Button (filled / tinted / disabled), on page and on night</Caption>
+          <Row>
+            <Button href="#">View projects</Button>
+            <Button href="#" variant="tinted">
+              Email me
+            </Button>
+            <Button disabled>Disabled</Button>
+          </Row>
+          <DarkBox>
+            <Button href="#" tone="night">
+              View projects
+            </Button>
+            <Button href="#" tone="night" variant="tinted">
+              Email me
+            </Button>
+          </DarkBox>
+        </div>
 
-          <div style={{ marginTop: 24 }}>
-            <div style={{ ...type.label, color: colors.inkMuted }}>TextLink (default · hover/focus interactive)</div>
-            <Row>
-              <TextLink href="#">View Projects</TextLink>
-              <TextLink href="#" arrow={false}>
-                No arrow
-              </TextLink>
-            </Row>
-            <DarkBox style={{ minHeight: 0 }}>
-              <TextLink href="#" tone="night">
-                On night
-              </TextLink>
-            </DarkBox>
-          </div>
+        <div style={{ marginTop: 32 }}>
+          <Caption>SectionLabel · TextLink</Caption>
+          <SectionLabel style={{ marginTop: 12 }}>Selected work</SectionLabel>
+          <Row>
+            <TextLink href="#">Learn more</TextLink>
+            <TextLink href="#" arrow={false}>
+              No chevron
+            </TextLink>
+          </Row>
+          <DarkBox>
+            <SectionLabel tone="night" style={{ margin: 0 }}>
+              Capabilities
+            </SectionLabel>
+            <TextLink href="#" tone="night">
+              On night
+            </TextLink>
+          </DarkBox>
+        </div>
 
-          <div style={{ marginTop: 24 }}>
-            <div style={{ ...type.label, color: colors.inkMuted }}>CategoryChip · YearChip</div>
-            <Row>
-              <CategoryChip>Civic</CategoryChip>
-              <CategoryChip>Residential</CategoryChip>
-            </Row>
-            <DarkBox>
-              <YearChip year={2026} />
-              <Row style={{ marginTop: 0 }}>
-                <CategoryChip onImage>On image</CategoryChip>
-              </Row>
-            </DarkBox>
-          </div>
+        <div style={{ marginTop: 32 }}>
+          <Caption>CategoryChip · YearChip (over imagery)</Caption>
+          <Row>
+            <CategoryChip>Civic</CategoryChip>
+            <CategoryChip>Residential</CategoryChip>
+          </Row>
+          <DarkBox style={{ minHeight: 96 }}>
+            <YearChip year={2026} />
+          </DarkBox>
+        </div>
 
-          <div style={{ marginTop: 24 }}>
-            <div style={{ ...type.label, color: colors.inkMuted }}>Hairline (paper / night)</div>
-            <Hairline style={{ marginTop: 12 }} />
-            <DarkBox style={{ minHeight: 0, justifyContent: 'center' }}>
-              <Hairline tone="night" />
-            </DarkBox>
-          </div>
+        <div style={{ marginTop: 32 }}>
+          <Caption>Hairline · SpecList</Caption>
+          <Hairline style={{ marginBlock: 12 }} />
+          <SpecList
+            rows={[
+              ['Year', 2026],
+              ['Tools', 'AutoCAD, Revit, Lumion'],
+            ]}
+          />
+        </div>
 
-          <div style={{ marginTop: 24, maxWidth: 420 }}>
-            <div style={{ ...type.label, color: colors.inkMuted }}>Form field — default / error / disabled</div>
-            <TextField fullWidth variant="standard" label="Default" defaultValue="" sx={{ marginTop: 12 }} />
-            <TextField fullWidth variant="standard" label="Error" error helperText="This field is required." sx={{ marginTop: 12 }} />
-            <TextField fullWidth variant="standard" label="Disabled" disabled defaultValue="Unavailable" sx={{ marginTop: 12 }} />
-          </div>
-        </Block>
-      </Section>
-    </>
+        <div style={{ marginTop: 32 }}>
+          <Caption>Form fields: see /contact (default, error and disabled states).</Caption>
+        </div>
+      </Block>
+    </Section>
   );
 }

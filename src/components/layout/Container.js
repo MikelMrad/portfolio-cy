@@ -1,12 +1,13 @@
 'use client';
 import { styled } from '@mui/material/styles';
 
-// Max-width 1440, fluid gutter, centered.
-const Container = styled('div')(({ theme }) => ({
+// Centered content column. `wide` widens it for full-width imagery.
+const Container = styled('div', { shouldForwardProp: (p) => p !== 'wide' })(({ theme, wide }) => ({
   width: '100%',
-  maxWidth: theme.custom.layout.maxWidth,
+  maxWidth: wide ? theme.custom.layout.wideMaxWidth : theme.custom.layout.maxWidth,
   marginInline: 'auto',
-  paddingInline: theme.custom.layout.gutter,
+  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
+  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
 }));
 
 export default Container;

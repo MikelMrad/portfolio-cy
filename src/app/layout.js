@@ -1,27 +1,20 @@
-import { Inter_Tight, Inter } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 import ThemeRegistry from '@/theme/ThemeRegistry';
-import SmoothScroll from '@/components/layout/SmoothScroll';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import SmoothScroll from '@/components/layout/SmoothScroll';
 import { site } from '@/content/site';
 import { t } from '@/content/i18n';
 import './globals.css';
 
-// next/font self-hosts at build time (export-safe, offline). Exposed as CSS vars
-// consumed by theme.js (var(--font-display) / var(--font-body)).
-const display = Inter_Tight({
+// The type stack leads with the system font (SF Pro on Apple devices). Inter is
+// self-hosted at build time as the fallback everywhere else, exposed as
+// var(--font-inter) and consumed by theme.js.
+const inter = Inter({
   subsets: ['latin'],
-  weight: '600',
-  style: ['normal', 'italic'],
-  variable: '--font-display',
-  display: 'swap',
-});
-
-const body = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-body',
+  weight: ['400', '500', '600'],
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -34,19 +27,22 @@ export const metadata = {
 };
 
 // `viewport-fit=cover` opts the page into the device safe-area insets that the
-// header/hero/menu/footer consume via env(safe-area-inset-*). `themeColor` tints
-// the mobile browser chrome to match the dark header. (Next 16 viewport export.)
+// nav/menu/footer consume via env(safe-area-inset-*). `themeColor` tints the
+// mobile browser chrome to match the page in each appearance.
 /** @type {import('next').Viewport} */
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0E0E0E',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body>
         <AppRouterCacheProvider>
           <ThemeRegistry>

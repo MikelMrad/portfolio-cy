@@ -5,30 +5,35 @@ import SectionLabel from '@/components/ui/SectionLabel';
 import Type from '@/components/ui/Type';
 import Reveal from '@/components/ui/Reveal';
 import ValueCard from '@/components/ui/ValueCard';
+import ToolsStrip from '@/components/ui/ToolsStrip';
 import { approach } from '@/content/approach';
+import { t } from '@/content/i18n';
 
-const Grid = styled('div')(({ theme }) => ({
+export const ValuesGrid = styled('div')(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '1fr',
-  gap: 40,
+  gap: 20,
   [theme.breakpoints.up('sm')]: { gridTemplateColumns: '1fr 1fr' },
-  [theme.breakpoints.up('md')]: { gridTemplateColumns: 'repeat(4, 1fr)' },
+  [theme.breakpoints.up('lg')]: { gridTemplateColumns: 'repeat(4, 1fr)' },
 }));
 
 export default function Approach() {
   return (
-    <Section tone="paper">
-      <SectionLabel>approach</SectionLabel>
+    <Section tone="alt">
       <Reveal>
-        <Type token="display3" as="p" sx={{ maxWidth: '20ch', marginTop: 8, marginBottom: 'clamp(40px, 6vw, 72px)' }}>
+        <SectionLabel>{t('home.approach')}</SectionLabel>
+        <Type token="display2" as="h2" sx={{ maxWidth: '20ch', marginBottom: 'clamp(32px, 5vw, 56px)' }}>
           Observe before intervening. Refine before adding.
         </Type>
-        <Grid>
-          {approach.map((v) => (
-            <ValueCard key={v.title} icon={v.icon} title={v.title} blurb={v.blurb} />
-          ))}
-        </Grid>
       </Reveal>
+      <ValuesGrid>
+        {approach.map((v, i) => (
+          <Reveal key={v.title} delay={i * 0.08}>
+            <ValueCard icon={v.icon} title={v.title} blurb={v.blurb} />
+          </Reveal>
+        ))}
+      </ValuesGrid>
+      <ToolsStrip />
     </Section>
   );
 }

@@ -1,42 +1,36 @@
 'use client';
 import { styled } from '@mui/material/styles';
 import Type from '@/components/ui/Type';
-import TextLink from '@/components/ui/TextLink';
+import Button from '@/components/ui/Button';
 import { t } from '@/content/i18n';
 
-// Full-bleed night 404 (the night background spans the full viewport width).
 const Root = styled('section')(({ theme }) => ({
-  minHeight: '100svh',
+  minHeight: `calc(100svh - ${theme.custom.layout.navClearance}px)`,
   display: 'flex',
   alignItems: 'center',
-  backgroundColor: theme.custom.colors.night,
-  color: theme.custom.colors.snow,
-}));
-
-const Inner = styled('div')(({ theme }) => ({
-  width: '100%',
-  maxWidth: theme.custom.layout.maxWidth,
-  marginInline: 'auto',
+  justifyContent: 'center',
+  textAlign: 'center',
   paddingInline: theme.custom.layout.gutter,
-  paddingBlock: 120,
+  paddingBlock: 96,
 }));
 
 export default function NotFoundView() {
   return (
     <Root>
-      <Inner>
-        <Type token="display1" as="h1">
+      <div>
+        <Type token="eyebrow" as="p" muted>
           404
         </Type>
-        <Type token="body" as="p" tone="night" muted style={{ marginTop: 16, maxWidth: '44ch' }}>
+        <Type token="display1" as="h1" sx={{ marginTop: '8px' }}>
+          {t('notFound.title')}
+        </Type>
+        <Type token="intro" as="p" muted sx={{ marginTop: '16px', maxWidth: '32ch', marginInline: 'auto' }}>
           {t('notFound.line')}
         </Type>
         <div style={{ marginTop: 32 }}>
-          <TextLink href="/" tone="night">
-            {t('notFound.backHome')}
-          </TextLink>
+          <Button href="/">{t('notFound.backHome')}</Button>
         </div>
-      </Inner>
+      </div>
     </Root>
   );
 }

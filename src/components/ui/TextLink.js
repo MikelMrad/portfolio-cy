@@ -2,37 +2,34 @@
 import Link from 'next/link';
 import { styled } from '@mui/material/styles';
 
-// Underlined text link with optional ↗ arrow, tone-aware.
+// Inline action link: "Learn more ›". Monochrome, so the chevron and weight carry
+// the affordance; underline on hover. Tone-aware.
 const linkStyles = (theme, tone) => {
   const c = theme.custom.colors;
-  const color = tone === 'night' ? c.snow : c.ink;
+  const color = tone === 'night' ? c.nightLabel : c.label;
   const m = theme.custom.motion;
   return {
-    ...theme.custom.type.label,
+    ...theme.custom.type.body,
+    fontWeight: 500,
     color,
     display: 'inline-flex',
     alignItems: 'baseline',
-    gap: '0.35em',
-    textDecoration: 'underline',
-    textUnderlineOffset: '6px',
-    textDecorationThickness: '1px',
-    transition: `text-decoration-thickness ${m.durations.reduced}s ${m.ease}`,
-    '&:hover': { textDecorationThickness: '2px' },
-    '& .arrow': {
-      fontSize: '0.9em',
-      transition: `transform ${m.durations.reduced}s ${m.ease}`,
+    gap: '0.3em',
+    minHeight: 44,
+    paddingBlock: 10,
+    textDecoration: 'none',
+    textUnderlineOffset: '0.2em',
+    '&:hover': { textDecoration: 'underline' },
+    '& .chev': {
+      display: 'inline-block',
+      transition: `transform ${m.durations.fast}s ${m.ease}`,
     },
-    '&:hover .arrow': { transform: 'translate(2px, -2px)' },
-    '&:focus-visible': { outline: `2px solid ${color}`, outlineOffset: '4px' },
+    '&:hover .chev': { transform: 'translateX(2px)' },
   };
 };
 
-const StyledNext = styled(Link, { shouldForwardProp: (p) => p !== 'tone' })(({ theme, tone }) =>
-  linkStyles(theme, tone)
-);
-const StyledA = styled('a', { shouldForwardProp: (p) => p !== 'tone' })(({ theme, tone }) =>
-  linkStyles(theme, tone)
-);
+const StyledNext = styled(Link, { shouldForwardProp: (p) => p !== 'tone' })(({ theme, tone }) => linkStyles(theme, tone));
+const StyledA = styled('a', { shouldForwardProp: (p) => p !== 'tone' })(({ theme, tone }) => linkStyles(theme, tone));
 
 export default function TextLink({ href = '#', children, arrow = true, tone = 'paper', ...rest }) {
   const internal = typeof href === 'string' && href.startsWith('/');
@@ -40,8 +37,8 @@ export default function TextLink({ href = '#', children, arrow = true, tone = 'p
     <>
       {children}
       {arrow ? (
-        <span className="arrow" aria-hidden="true">
-          ↗
+        <span className="chev" aria-hidden="true">
+          ›
         </span>
       ) : null}
     </>

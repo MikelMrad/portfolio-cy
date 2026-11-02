@@ -1,38 +1,53 @@
 'use client';
 import { styled } from '@mui/material/styles';
-import Container from '@/components/layout/Container';
+import { motion } from 'framer-motion';
+import Type from './Type';
 import { site } from '@/content/site';
+import { t } from '@/content/i18n';
 
-// Static hairline-bounded row of tool wordmarks (no marquee). ui-spec §ToolsStrip.
-const Band = styled('div')(({ theme }) => ({ backgroundColor: theme.custom.colors.paper }));
+// The software she works in, as a quiet row of pills.
+const Wrap = styled('div')({ marginTop: 'clamp(40px, 6vw, 64px)', textAlign: 'center' });
 
-const Row = styled('div')(({ theme }) => ({
-  borderTop: `1px solid ${theme.custom.colors.lineLight}`,
-  borderBottom: `1px solid ${theme.custom.colors.lineLight}`,
-  paddingBlock: 32,
+const Row = styled('ul')({
+  listStyle: 'none',
+  margin: '16px 0 0',
+  padding: 0,
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'center',
-  gap: 'clamp(24px, 5vw, 64px)',
-}));
+  gap: 8,
+});
 
-const Tool = styled('span')(({ theme }) => ({
+const Tool = styled(motion.li)(({ theme }) => ({
   ...theme.custom.type.label,
-  color: theme.custom.colors.inkMuted,
-  textTransform: 'uppercase',
-  letterSpacing: '0.08em',
+  display: 'inline-flex',
+  alignItems: 'center',
+  minHeight: 36,
+  paddingInline: 16,
+  borderRadius: theme.custom.radius.pill,
+  backgroundColor: theme.custom.colors.tile,
+  color: theme.custom.colors.label,
 }));
 
 export default function ToolsStrip() {
   return (
-    <Band>
-      <Container>
-        <Row>
-          {site.tools.map((tool) => (
-            <Tool key={tool}>{tool}</Tool>
-          ))}
-        </Row>
-      </Container>
-    </Band>
+    <Wrap>
+      <Type token="label" as="p" muted>
+        {t('home.tools')}
+      </Type>
+      <Row>
+        {site.tools.map((tool, i) => (
+          <Tool
+            key={tool}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
+          >
+            {tool}
+          </Tool>
+        ))}
+      </Row>
+    </Wrap>
   );
 }

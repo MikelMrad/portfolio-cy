@@ -1,6 +1,5 @@
 'use client';
 import { styled } from '@mui/material/styles';
-import SectionLabel from '@/components/ui/SectionLabel';
 import Type from '@/components/ui/Type';
 import ImageFigure from '@/components/ui/ImageFigure';
 import Reveal from '@/components/ui/Reveal';
@@ -36,7 +35,7 @@ const Media = styled('div', { shouldForwardProp: (p) => p !== 'matchHeight' })((
       }
     : {
         position: 'sticky',
-        top: `calc(${theme.custom.layout.header.md}px + 24px)`,
+        top: theme.custom.layout.navClearance + 24,
       },
 }));
 
@@ -47,11 +46,10 @@ export default function ProjectConcept({ paragraphs, images = [], image, matchHe
   const fill = matchHeight && list.length === 1;
   return (
     <div>
-      <SectionLabel>concept</SectionLabel>
       <Grid matchHeight={fill}>
         <div>
           {paragraphs.map((para, i) => (
-            <Type key={`concept-p${i}`} token="body" as="p" style={{ maxWidth: '60ch', marginBottom: 20 }}>
+            <Type key={`concept-p${i}`} token={i === 0 ? 'intro' : 'body'} as="p" style={{ maxWidth: '60ch', marginBottom: 20 }}>
               {para}
             </Type>
           ))}

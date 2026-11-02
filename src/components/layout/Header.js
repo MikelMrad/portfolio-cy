@@ -1,122 +1,200 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { styled } from '@mui/material/styles';
+import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
+import { styled, useTheme } from '@mui/material/styles';
 import { site } from '@/content/site';
 import { t } from '@/content/i18n';
 import MenuOverlay from './MenuOverlay';
+import { pages, contactPage, isActive } from './nav';
 
-// Transparent over the Home hero (snow text) → `night` bg after scrollY > 40 (0.3s).
-// Solid `night` from the top on every other route. Full-width hairline beneath.
-const Bar = styled('header', { shouldForwardProp: (p) => p !== 'solid' })(({ theme, solid }) => {
+// Floating glass capsule centered at the top. It slides away while scrolling
+// down and returns on any scroll up. A pill highlight glides between links,
+// following the hovered link and resting on the current page.
+const Shell = styled(motion.header)(({ theme }) => ({
+  position: 'fixed',
+  top: `max(${theme.custom.layout.navTop}px, env(safe-area-inset-top))`,
+  left: 0,
+  right: 0,
+  zIndex: 1000,
+  display: 'flex',
+  justifyContent: 'center',
+  paddingInline: 12,
+  pointerEvents: 'none',
+}));
+
+const Capsule = styled('div')(({ theme }) => {
   const c = theme.custom.colors;
   return {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1000,
-    height: 72,
+    pointerEvents: 'auto',
     display: 'flex',
     alignItems: 'center',
-    color: c.snow,
-    backgroundColor: solid ? c.night : 'transparent',
-    borderBottom: `1px solid ${c.lineDark}`,
-    transition: `background-color ${theme.custom.motion.durations.header}s ${theme.custom.motion.ease}`,
-    [theme.breakpoints.up('md')]: { height: 88 },
+    gap: 4,
+    width: '100%',
+    maxWidth: 560,
+    height: theme.custom.layout.header,
+    padding: 6,
+    borderRadius: theme.custom.radius.pill,
+    color: c.label,
+    backgroundColor: c.navBg,
+    backdropFilter: 'saturate(180%) blur(24px)',
+    WebkitBackdropFilter: 'saturate(180%) blur(24px)',
+    // Hairline edge + soft lift so the glass reads over both photos and flat color.
+    boxShadow: `inset 0 0 0 1px ${c.separator}, 0 8px 32px rgba(0,0,0,0.10)`,
+    '@media (prefers-reduced-transparency: reduce)': { backgroundColor: c.bg },
   };
 });
 
-const Inner = styled('div')(({ theme }) => ({
-  width: '100%',
-  maxWidth: theme.custom.layout.maxWidth,
-  marginInline: 'auto',
-  // Keep the wordmark / menu clear of a landscape notch.
-  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
-  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-}));
-
 const Wordmark = styled(Link)(({ theme }) => ({
+  ...theme.custom.type.body,
+  fontWeight: 600,
   display: 'inline-flex',
   alignItems: 'center',
-  minHeight: 44,
-  fontFamily: theme.custom.type.display3.fontFamily,
-  fontWeight: 600,
-  fontSize: 22,
-  lineHeight: 1,
+  height: '100%',
+  paddingInline: 14,
+  marginRight: 'auto',
+  whiteSpace: 'nowrap',
   color: 'inherit',
-  textTransform: 'lowercase',
-  letterSpacing: '-0.01em',
-  '&:focus-visible': { outline: `2px solid ${theme.custom.colors.snow}`, outlineOffset: 4 },
+  borderRadius: theme.custom.radius.pill,
 }));
+
+const Links = styled('nav')(({ theme }) => ({
+  display: 'none',
+  height: '100%',
+  [theme.breakpoints.up('sm')]: { display: 'flex' },
+}));
+
+const NavLink = styled(Link)(({ theme }) => {
+  const c = theme.custom.colors;
+  return {
+    ...theme.custom.type.label,
+    position: 'relative',
+    display: 'inline-flex',
+    alignItems: 'center',
+    height: '100%',
+    paddingInline: 16,
+    borderRadius: theme.custom.radius.pill,
+    color: c.label2,
+    transition: `color ${theme.custom.motion.durations.fast}s ${theme.custom.motion.ease}`,
+    '&:hover, &[aria-current="page"]': { color: c.label },
+    '& .label': { position: 'relative', zIndex: 1 },
+  };
+});
+
+const Highlight = styled(motion.span)(({ theme }) => ({
+  position: 'absolute',
+  inset: 0,
+  borderRadius: theme.custom.radius.pill,
+  backgroundColor: theme.custom.colors.fill,
+}));
+
+const ContactButton = styled(Link)(({ theme }) => {
+  const c = theme.custom.colors;
+  return {
+    ...theme.custom.type.label,
+    fontWeight: 500,
+    display: 'none',
+    alignItems: 'center',
+    height: '100%',
+    paddingInline: 18,
+    marginLeft: 4,
+    borderRadius: theme.custom.radius.pill,
+    backgroundColor: c.buttonBg,
+    color: c.buttonFg,
+    whiteSpace: 'nowrap',
+    transition: `opacity ${theme.custom.motion.durations.fast}s ${theme.custom.motion.ease}, transform ${theme.custom.motion.durations.fast}s ${theme.custom.motion.ease}`,
+    '&:hover': { opacity: 0.86 },
+    '&:active': { transform: 'scale(0.97)' },
+    [theme.breakpoints.up('sm')]: { display: 'inline-flex' },
+  };
+});
 
 const MenuButton = styled('button')(({ theme }) => ({
-  ...theme.custom.type.label,
   display: 'inline-flex',
   alignItems: 'center',
-  gap: 12,
-  minHeight: 44,
-  minWidth: 44,
-  justifyContent: 'flex-end',
-  padding: '0 2px',
-  background: 'none',
+  justifyContent: 'center',
+  width: 40,
+  height: 40,
+  padding: 0,
+  borderRadius: '50%',
+  background: theme.custom.colors.fill,
   border: 'none',
   color: 'inherit',
   cursor: 'pointer',
-  '&:focus-visible': { outline: `2px solid ${theme.custom.colors.snow}`, outlineOffset: 4 },
+  [theme.breakpoints.up('sm')]: { display: 'none' },
 }));
 
-// 24×12 two-line hamburger that converges on hover and rotates to an × when open.
-const Burger = styled('span', { shouldForwardProp: (p) => p !== 'open' })(({ theme, open }) => {
-  const dur = theme.custom.motion.durations.header;
+// 16×7 two-line glyph that rotates to an × when open.
+const Glyph = styled('span', { shouldForwardProp: (p) => p !== 'open' })(({ theme, open }) => {
+  const { fast } = theme.custom.motion.durations;
   const ease = theme.custom.motion.ease;
   return {
     position: 'relative',
-    display: 'inline-block',
-    width: 24,
-    height: 12,
-    flex: 'none',
+    width: 16,
+    height: 7,
     '& i': {
       position: 'absolute',
       left: 0,
-      display: 'block',
       width: '100%',
-      height: 2,
+      height: 1.5,
+      borderRadius: 1,
       backgroundColor: 'currentColor',
-      transition: `top ${dur}s ${ease}, transform ${dur}s ${ease}`,
+      transition: `top ${fast}s ${ease}, transform ${fast}s ${ease}`,
     },
-    '& i:nth-of-type(1)': { top: open ? 5 : 0, transform: open ? 'rotate(45deg)' : 'none' },
-    '& i:nth-of-type(2)': { top: open ? 5 : 10, transform: open ? 'rotate(-45deg)' : 'none' },
+    '& i:nth-of-type(1)': { top: open ? 2.75 : 0, transform: open ? 'rotate(45deg)' : 'none' },
+    '& i:nth-of-type(2)': { top: open ? 2.75 : 5.5, transform: open ? 'rotate(-45deg)' : 'none' },
   };
 });
 
 export default function Header() {
+  const theme = useTheme();
   const pathname = usePathname();
-  const isHome = pathname === '/';
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [hovered, setHovered] = useState(null);
   const triggerRef = useRef(null);
-
-  useEffect(() => {
-    if (!isHome) return undefined;
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [isHome]);
-
-  const solid = !isHome || scrolled || open;
   const closeMenu = useCallback(() => setOpen(false), []);
+
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    if (Math.abs(y - prev) < 4) return; // ignore jitter
+    setHidden(y > prev && y > 160);
+  });
+
+  const activeKey = pages.find((p) => isActive(pathname, p.href))?.key ?? null;
+  const pillKey = hovered ?? activeKey;
 
   return (
     <>
-      <Bar solid={solid}>
-        <Inner>
-          <Wordmark href="/">{site.wordmark}</Wordmark>
+      <Shell
+        initial={{ y: -24, opacity: 0 }}
+        animate={{ y: hidden && !open ? -96 : 0, opacity: hidden && !open ? 0 : 1 }}
+        transition={{ duration: 0.45, ease: theme.custom.motion.easeOut }}
+      >
+        <Capsule>
+          <Wordmark href="/" onClick={closeMenu}>
+            {site.name}
+          </Wordmark>
+          <Links aria-label="Primary" onMouseLeave={() => setHovered(null)}>
+            {pages.map((p) => (
+              <NavLink
+                key={p.key}
+                href={p.href}
+                aria-current={isActive(pathname, p.href) ? 'page' : undefined}
+                onMouseEnter={() => setHovered(p.key)}
+                onFocus={() => setHovered(p.key)}
+                onBlur={() => setHovered(null)}
+              >
+                {pillKey === p.key ? <Highlight layoutId="nav-pill" transition={theme.custom.motion.spring} /> : null}
+                <span className="label">{t(`nav.${p.key}`)}</span>
+              </NavLink>
+            ))}
+          </Links>
+          <ContactButton href={contactPage.href} aria-current={isActive(pathname, contactPage.href) ? 'page' : undefined}>
+            {t('nav.contact')}
+          </ContactButton>
           <MenuButton
             ref={triggerRef}
             type="button"
@@ -125,14 +203,13 @@ export default function Header() {
             aria-label={open ? t('a11y.closeMenu') : t('a11y.openMenu')}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? t('nav.close') : t('nav.menu')}
-            <Burger open={open} aria-hidden="true">
+            <Glyph open={open} aria-hidden="true">
               <i />
               <i />
-            </Burger>
+            </Glyph>
           </MenuButton>
-        </Inner>
-      </Bar>
+        </Capsule>
+      </Shell>
       <MenuOverlay open={open} onClose={closeMenu} triggerRef={triggerRef} />
     </>
   );

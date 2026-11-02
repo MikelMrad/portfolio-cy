@@ -1,143 +1,77 @@
 'use client';
-import { useRef, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
+import ParallaxImage from '@/components/motion/ParallaxImage';
 import { styled } from '@mui/material/styles';
-import YearChip from './YearChip';
-import CategoryChip from './CategoryChip';
 import Type from './Type';
-import CursorBadge from './CursorBadge';
+import { t } from '@/content/i18n';
 
-// SSR-safe pointer:fine detection (no setState-in-effect) via useSyncExternalStore.
-const FINE_QUERY = '(hover: hover) and (pointer: fine)';
-const subscribeFine = (cb) => {
-  const mq = window.matchMedia(FINE_QUERY);
-  mq.addEventListener('change', cb);
-  return () => mq.removeEventListener('change', cb);
-};
-const getFineSnapshot = () => window.matchMedia(FINE_QUERY).matches;
-const getFineServer = () => false;
-
-const Card = styled(Link)(({ theme }) => {
+// Product-style tile: copy centered at the top, the render filling the bottom.
+// `large` is the full-width lead tile. The whole tile is one link.
+const Tile = styled(Link, { shouldForwardProp: (p) => p !== 'large' })(({ theme, large }) => {
+  const c = theme.custom.colors;
   const m = theme.custom.motion;
   return {
-    position: 'relative',
-    display: 'block',
-    width: '100%',
-    minHeight: '60vh',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    borderRadius: theme.custom.radius.tile,
     overflow: 'hidden',
-    color: theme.custom.colors.snow,
-    backgroundColor: theme.custom.colors.night,
-    [theme.breakpoints.up('md')]: { minHeight: '70vh' },
-    '& .fp-media': {
-      position: 'absolute',
-      inset: 0,
-      transition: `transform ${m.durations.image}s ${m.ease}`,
+    backgroundColor: c.tile,
+    color: c.label,
+    textAlign: 'center',
+    transition: `transform ${m.durations.base}s ${m.ease}, box-shadow ${m.durations.base}s ${m.ease}`,
+    '& .tile-copy': {
+      padding: large ? 'clamp(32px, 5vw, 56px) 24px 32px' : '36px 24px 28px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 8,
     },
+    '& .tile-media': {
+      position: 'relative',
+      marginTop: 'auto',
+      aspectRatio: large ? '16 / 7' : '4 / 3',
+      backgroundColor: c.imgLoading,
+      overflow: 'hidden',
+    },
+    '& .tile-img': { position: 'absolute', inset: 0, transition: `transform ${m.durations.enter}s ${m.ease}` },
+    '& .tile-more': { ...theme.custom.type.body, fontWeight: 500, marginTop: 8 },
     '@media (hover: hover) and (pointer: fine)': {
-      '&:hover .fp-media': { transform: 'scale(1.05)' },
+      '&:hover': { transform: 'translateY(-6px)', boxShadow: '0 24px 48px rgba(0,0,0,0.14)' },
+      '&:hover .tile-img': { transform: 'scale(1.04)' },
+      '&:hover .tile-more': { textDecoration: 'underline', textUnderlineOffset: '0.2em' },
     },
-    '@media (prefers-reduced-motion: reduce)': {
-      '&:hover .fp-media': { transform: 'none' },
-    },
-    '&:focus-visible': { outline: `2px solid ${theme.custom.colors.snow}`, outlineOffset: -2 },
+    '&:focus-visible': { outline: `2px solid ${c.label}`, outlineOffset: 4 },
   };
 });
 
-const Scrim = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  inset: 0,
-  zIndex: 1,
-  backgroundColor: theme.custom.colors.scrim,
-  backgroundImage: 'linear-gradient(to top, rgba(10,10,10,0.7), rgba(10,10,10,0.1))',
-}));
-
-const Content = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  left: 0,
-  bottom: 0,
-  zIndex: 2,
-  padding: 'clamp(24px, 4vw, 48px)',
-  maxWidth: '58ch',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 16,
-}));
-
-const Chips = styled('div')({ display: 'flex', flexWrap: 'wrap', gap: 8 });
-
-export default function FeaturedProjectCard({ project }) {
-  const ref = useRef(null);
-  const reduce = useReducedMotion();
-  const fine = useSyncExternalStore(subscribeFine, getFineSnapshot, getFineServer);
-  const [hovered, setHovered] = useState(false);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 150, damping: 20 });
-  const sy = useSpring(y, { stiffness: 150, damping: 20 });
-
-  const enableBadge = fine && !reduce;
-
-  // Position the badge at the cursor. `instant` snaps the spring (via jump) so it
-  // appears exactly under the pointer on entry instead of flying in from (0,0).
-  const setPos = (e, instant) => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const px = e.clientX - r.left;
-    const py = e.clientY - r.top;
-    x.set(px);
-    y.set(py);
-    if (instant) {
-      sx.jump(px);
-      sy.jump(py);
-    }
-  };
-
-  const onEnter = (e) => {
-    if (!enableBadge) return;
-    setPos(e, true);
-    setHovered(true);
-  };
-  // Track + reveal on move too: if a card pins under a stationary cursor while
-  // scrolling, mouseenter may not fire — the first move still shows the badge.
-  const onMove = (e) => {
-    if (!enableBadge) return;
-    setPos(e, !hovered);
-    if (!hovered) setHovered(true);
-  };
-
+export default function FeaturedProjectCard({ project, large = false, priority = false }) {
   return (
-    <Card
-      ref={ref}
-      href={`/projects/${project.slug}/`}
-      aria-label={`${project.title} — ${project.summary}`}
-      onMouseMove={onMove}
-      onMouseEnter={onEnter}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div className="fp-media">
-        <Image src={project.heroImage.src} alt="" fill sizes="(min-width: 1536px) 1440px, 100vw" style={{ objectFit: 'cover' }} />
-      </div>
-      <Scrim />
-      <YearChip year={project.year} />
-      <Content>
-        <Type token="display3" as="h2">
+    <Tile href={`/projects/${project.slug}/`} large={large}>
+      <div className="tile-copy">
+        <Type token="label" as="p" muted>
+          {project.academicContext} · {project.year}
+        </Type>
+        <Type token={large ? 'display3' : 'hSmall'} as="h3">
           {project.title}
         </Type>
-        <Type token="body" as="p" style={{ opacity: 0.9 }}>
+        <Type token="body" as="p" muted sx={{ maxWidth: '44ch' }}>
           {project.summary}
         </Type>
-        <Chips>
-          {project.categories.map((c) => (
-            <CategoryChip key={c} onImage>
-              {c}
-            </CategoryChip>
-          ))}
-        </Chips>
-      </Content>
-      {enableBadge ? <CursorBadge style={{ x: sx, y: sy }} visible={hovered} /> : null}
-    </Card>
+        <span className="tile-more" aria-hidden="true">
+          {t('home.viewProject')} ›
+        </span>
+      </div>
+      <div className="tile-media">
+        <div className="tile-img">
+          <ParallaxImage
+            src={project.heroImage.src}
+            alt={project.heroImage.alt}
+            priority={priority}
+            sizes={large ? '(min-width: 1200px) 1120px, 100vw' : '(min-width: 900px) 560px, 100vw'}
+          />
+        </div>
+      </div>
+    </Tile>
   );
 }

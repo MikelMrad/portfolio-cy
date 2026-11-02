@@ -1,147 +1,77 @@
 'use client';
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useLenis } from 'lenis/react';
 import { styled, useTheme } from '@mui/material/styles';
 import { site } from '@/content/site';
 import { t } from '@/content/i18n';
-import { LenisContext } from './LenisContext';
+import { pages, contactPage, isActive } from './nav';
 
-const pages = [
-  { href: '/', key: 'home' },
-  { href: '/projects', key: 'projects' },
-  { href: '/about', key: 'about' },
-  { href: '/contact', key: 'contact' },
-];
-
-const Overlay = styled(motion.div)(({ theme }) => ({
+// Small-screen menu: a rounded glass panel that drops from the nav capsule over
+// a dimmed page. Tapping outside or pressing Escape closes it.
+const Scrim = styled(motion.div)(({ theme }) => ({
   position: 'fixed',
   inset: 0,
-  zIndex: 1500,
-  backgroundColor: theme.custom.colors.night,
-  color: theme.custom.colors.snow,
-  display: 'flex',
-  flexDirection: 'column',
-  // Mobile: anchor the nav to the bottom (thumb zone) and clear the notch /
-  // home indicator. Desktop keeps the centered composition.
-  justifyContent: 'flex-end',
-  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
-  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
-  paddingTop: `calc(${theme.custom.layout.header.xs}px + 24px)`,
-  paddingBottom: 'max(56px, calc(40px + env(safe-area-inset-bottom)))',
-  [theme.breakpoints.up('md')]: {
-    justifyContent: 'center',
-    paddingBlock: 96,
-  },
+  zIndex: 998,
+  backgroundColor: 'rgba(0,0,0,0.32)',
+  [theme.breakpoints.up('sm')]: { display: 'none' },
 }));
 
-const List = styled(motion.nav)({ display: 'flex', flexDirection: 'column', gap: 4 });
-
-const MenuLink = styled(Link)(({ theme }) => {
-  const m = theme.custom.motion;
+const Panel = styled(motion.div)(({ theme }) => {
   const c = theme.custom.colors;
+  const l = theme.custom.layout;
   return {
-    ...theme.custom.type.display3,
-    // Larger, thumb-friendly links on mobile; spec display3 size returns at md.
-    fontSize: 'clamp(2.25rem, 9vw, 2.75rem)',
-    display: 'flex',
-    alignItems: 'center',
-    minHeight: 56,
-    color: c.nightMuted,
-    width: 'fit-content',
-    paddingBlock: 6,
-    transition: `transform ${m.durations.reduced}s ${m.ease}, color ${m.durations.reduced}s ${m.ease}`,
-    // Current-page marker: a short leading rule + snow text (a11y via aria-current).
-    '&::before': {
-      content: '""',
-      display: 'inline-block',
-      width: 0,
-      height: 2,
-      marginRight: 0,
-      backgroundColor: c.snow,
-      transition: `width ${m.durations.reduced}s ${m.ease}, margin-right ${m.durations.reduced}s ${m.ease}`,
-    },
-    '&[aria-current="page"]': {
-      color: c.snow,
-      '&::before': { width: 28, marginRight: 20 },
-    },
-    '&:hover': { color: c.snow },
-    '&:focus-visible': { outline: `2px solid ${c.snow}`, outlineOffset: 4, color: c.snow },
-    // translate only when motion is allowed (reduced-motion keeps the color change only)
-    '@media (prefers-reduced-motion: no-preference)': {
-      '&:hover': { transform: 'translateX(8px)' },
-    },
-    [theme.breakpoints.up('md')]: { fontSize: theme.custom.type.display3.fontSize, minHeight: 'auto' },
+    position: 'fixed',
+    top: `calc(max(${l.navTop}px, env(safe-area-inset-top)) + ${l.header + 8}px)`,
+    left: 12,
+    right: 12,
+    zIndex: 999,
+    maxHeight: 'calc(100svh - 96px)',
+    overflowY: 'auto',
+    padding: '12px 20px 20px',
+    borderRadius: theme.custom.radius.tile,
+    color: c.label,
+    backgroundColor: c.navBg,
+    backdropFilter: 'saturate(180%) blur(24px)',
+    WebkitBackdropFilter: 'saturate(180%) blur(24px)',
+    boxShadow: `inset 0 0 0 1px ${c.separator}, 0 16px 48px rgba(0,0,0,0.18)`,
+    transformOrigin: 'top center',
+    '@media (prefers-reduced-transparency: reduce)': { backgroundColor: c.bg },
+    [theme.breakpoints.up('sm')]: { display: 'none' },
   };
 });
 
-const Hairline = styled('div')(({ theme }) => ({
-  borderTop: `1px solid ${theme.custom.colors.lineDark}`,
-  marginTop: 40,
-  paddingTop: 24,
+const MenuLink = styled(Link)(({ theme }) => ({
+  ...theme.custom.type.display3,
+  fontSize: '1.75rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  minHeight: 56,
+  color: theme.custom.colors.label,
+  '&[aria-current="page"]': { color: theme.custom.colors.label2 },
+  '& .chev': { ...theme.custom.type.body, color: theme.custom.colors.label2 },
 }));
 
 const Meta = styled('div')(({ theme }) => ({
-  ...theme.custom.type.label,
-  color: theme.custom.colors.nightMuted,
+  ...theme.custom.type.body,
+  color: theme.custom.colors.label2,
   display: 'flex',
   flexDirection: 'column',
-  gap: 4,
-  [theme.breakpoints.down('md')]: { gap: 8 },
-}));
-
-const MetaLink = styled('a')(({ theme }) => ({
-  color: 'inherit',
-  width: 'fit-content',
-  display: 'inline-flex',
-  alignItems: 'center',
-  // ≥44px touch target on mobile without disturbing the desktop line rhythm.
-  [theme.breakpoints.down('md')]: { minHeight: 44 },
-  '&:focus-visible': { outline: `2px solid ${theme.custom.colors.snow}`, outlineOffset: 4 },
-}));
-
-const MetaText = styled('span')(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  [theme.breakpoints.down('md')]: { minHeight: 44 },
+  marginTop: 12,
+  paddingTop: 8,
+  borderTop: `1px solid ${theme.custom.colors.separator}`,
+  '& a, & span': { display: 'inline-flex', alignItems: 'center', minHeight: 44, width: 'fit-content' },
 }));
 
 export default function MenuOverlay({ open, onClose, triggerRef }) {
   const ref = useRef(null);
-  const lenisRef = useContext(LenisContext);
   const theme = useTheme();
-  const reduce = useReducedMotion();
   const pathname = usePathname();
+  const lenis = useLenis();
   const m = theme.custom.motion;
-
-  // Active when the route matches exactly, or (for section roots like /projects)
-  // when the current path sits under it — so a project detail marks "Projects".
-  const isActive = (href) => (href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`));
-
-  // Motion variants: clip-path reveal + staggered link fade-up; opacity-only under reduced motion.
-  const overlayVariants = reduce
-    ? {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { duration: m.durations.reduced, when: 'beforeChildren', staggerChildren: 0 } },
-        exit: { opacity: 0, transition: { duration: m.durations.reduced } },
-      }
-    : {
-        hidden: { clipPath: 'inset(0 0 100% 0)', opacity: 0 },
-        visible: {
-          clipPath: 'inset(0 0 0% 0)',
-          opacity: 1,
-          transition: { duration: m.durations.base, ease: m.easeArray, when: 'beforeChildren', staggerChildren: m.stagger, delayChildren: 0.12 },
-        },
-        exit: { clipPath: 'inset(0 0 100% 0)', opacity: 0, transition: { duration: m.durations.base, ease: m.easeArray } },
-      };
-
-  const itemVariants = reduce
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1 } }
-    : {
-        hidden: { opacity: 0, y: 24 },
-        visible: { opacity: 1, y: 0, transition: { duration: m.durations.base, ease: m.easeArray } },
-      };
 
   const onKeyDown = useCallback(
     (e) => {
@@ -151,8 +81,11 @@ export default function MenuOverlay({ open, onClose, triggerRef }) {
         return;
       }
       if (e.key === 'Tab') {
-        const focusables = ref.current?.querySelectorAll('a[href], button:not([disabled])');
-        if (!focusables || focusables.length === 0) return;
+        // Trap focus across the open panel and its trigger in the nav capsule.
+        const trigger = triggerRef?.current;
+        const inPanel = [...(ref.current?.querySelectorAll('a[href], button:not([disabled])') || [])];
+        const focusables = trigger ? [trigger, ...inPanel] : inPanel;
+        if (!focusables.length) return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
         if (e.shiftKey && document.activeElement === first) {
@@ -164,18 +97,16 @@ export default function MenuOverlay({ open, onClose, triggerRef }) {
         }
       }
     },
-    [onClose]
+    [onClose, triggerRef]
   );
 
   useEffect(() => {
     if (!open) return undefined;
     const trigger = triggerRef?.current;
-    const lenis = lenisRef?.current;
     const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden'; // native scroll lock (covers reduced-motion / no Lenis)
-    lenis?.stop(); // pause smooth scroll while the overlay is open
-    const focusables = ref.current?.querySelectorAll('a[href], button:not([disabled])');
-    focusables?.[0]?.focus();
+    document.body.style.overflow = 'hidden';
+    lenis?.stop(); // pause smooth scroll behind the open menu
+    ref.current?.querySelector('a[href]')?.focus();
     document.addEventListener('keydown', onKeyDown);
     return () => {
       document.body.style.overflow = prevOverflow;
@@ -183,41 +114,63 @@ export default function MenuOverlay({ open, onClose, triggerRef }) {
       document.removeEventListener('keydown', onKeyDown);
       trigger?.focus(); // return focus to the trigger on close
     };
-  }, [open, onKeyDown, triggerRef, lenisRef]);
+  }, [open, onKeyDown, triggerRef, lenis]);
+
+  // Close if the viewport grows past the small-screen breakpoint while open.
+  useEffect(() => {
+    if (!open) return undefined;
+    const mq = window.matchMedia(theme.breakpoints.up('sm').replace('@media ', ''));
+    const onChange = (e) => e.matches && onClose();
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, [open, onClose, theme]);
+
+  const links = [{ href: '/', key: 'home' }, ...pages, contactPage];
 
   return (
     <div id="menu-overlay">
       <AnimatePresence>
         {open ? (
-          <Overlay
-            ref={ref}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t('nav.menu')}
-            variants={overlayVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <List>
-              {pages.map((p) => (
-                <motion.div key={p.key} variants={itemVariants}>
-                  <MenuLink href={p.href} onClick={onClose} aria-current={isActive(p.href) ? 'page' : undefined}>
-                    {t(`nav.${p.key}`)}
-                  </MenuLink>
-                </motion.div>
-              ))}
-            </List>
-            <motion.div variants={itemVariants}>
-              <Hairline>
-                <Meta>
-                  <MetaLink href={`mailto:${site.email}`}>{site.email}</MetaLink>
-                  <MetaLink href={`tel:${site.phone.replace(/\s+/g, '')}`}>{site.phone}</MetaLink>
-                  <MetaText>{site.location}</MetaText>
-                </Meta>
-              </Hairline>
-            </motion.div>
-          </Overlay>
+          <>
+            <Scrim key="scrim" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+            <Panel
+              key="panel"
+              ref={ref}
+              role="dialog"
+              aria-modal="true"
+              aria-label={t('nav.menu')}
+              initial={{ opacity: 0, y: -12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ duration: m.durations.base, ease: m.easeOut }}
+            >
+              <nav aria-label="Primary">
+                {links.map((p, i) => (
+                  <motion.div
+                    key={p.key}
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: m.durations.base, ease: m.easeOut, delay: 0.04 * i }}
+                  >
+                    <MenuLink
+                      href={p.href}
+                      onClick={onClose}
+                      aria-current={(p.href === '/' ? pathname === '/' : isActive(pathname, p.href)) ? 'page' : undefined}
+                    >
+                      {t(`nav.${p.key}`)}
+                      <span className="chev" aria-hidden="true">
+                        ›
+                      </span>
+                    </MenuLink>
+                  </motion.div>
+                ))}
+              </nav>
+              <Meta>
+                <a href={`mailto:${site.email}`}>{site.email}</a>
+                <a href={`tel:${site.phone.replace(/\s+/g, '')}`}>{site.phone}</a>
+              </Meta>
+            </Panel>
+          </>
         ) : null}
       </AnimatePresence>
     </div>

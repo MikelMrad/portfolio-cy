@@ -2,21 +2,22 @@
 import { styled } from '@mui/material/styles';
 import Container from './Container';
 
-// Full-width tone background + text-color context; wraps a Container.
-const Root = styled('section', { shouldForwardProp: (p) => p !== 'tone' })(({ theme, tone }) => {
+// Full-width tone band + text-color context; wraps a Container.
+// tone: 'paper' (page bg) | 'alt' (grouped gray) | 'night' (black showcase).
+const Root = styled('section', { shouldForwardProp: (p) => p !== 'tone' && p !== 'tight' })(({ theme, tone, tight }) => {
   const c = theme.custom.colors;
-  const night = tone === 'night';
+  const bg = { paper: c.bg, alt: c.bgAlt, night: c.night }[tone] || c.bg;
   return {
-    backgroundColor: night ? c.night : c.paper,
-    color: night ? c.snow : c.ink,
-    paddingBlock: theme.custom.layout.sectionPad,
+    backgroundColor: bg,
+    color: tone === 'night' ? c.nightLabel : c.label,
+    paddingBlock: tight ? 'clamp(40px, 6vw, 72px)' : theme.custom.layout.sectionPad,
   };
 });
 
-export default function Section({ tone = 'paper', disableContainer = false, children, className, id }) {
+export default function Section({ tone = 'paper', tight = false, disableContainer = false, wide = false, children, className, id, ...rest }) {
   return (
-    <Root tone={tone} className={className} id={id}>
-      {disableContainer ? children : <Container>{children}</Container>}
+    <Root tone={tone} tight={tight} className={className} id={id} {...rest}>
+      {disableContainer ? children : <Container wide={wide}>{children}</Container>}
     </Root>
   );
 }

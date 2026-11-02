@@ -1,5 +1,41 @@
-/* Base reset + document chrome. Component styling lives in theme.js + styled().
-   Body background/color are applied by MUI CssBaseline from the theme (paper / ink). */
+/* Base reset + color tokens. Component styling lives in theme.js + styled().
+   Every color the theme exposes is one of these variables, so the site follows
+   the visitor's light/dark appearance with no JS. */
+:root {
+  color-scheme: light dark;
+  --c-bg: #ffffff;
+  --c-bg-alt: #f5f5f7;
+  --c-tile: #ffffff;
+  --c-label: #1d1d1f;
+  --c-label-2: #6e6e73;
+  --c-separator: rgba(0, 0, 0, 0.12);
+  --c-fill: rgba(0, 0, 0, 0.05);
+  --c-fill-hover: rgba(0, 0, 0, 0.09);
+  --c-button-bg: #1d1d1f;
+  --c-button-fg: #ffffff;
+  --c-nav-bg: rgba(251, 251, 253, 0.8);
+  --c-img-loading: #e8e8ed;
+  --c-danger: #d70015;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-bg: #000000;
+    --c-bg-alt: #161617;
+    --c-tile: #1d1d1f;
+    --c-label: #f5f5f7;
+    --c-label-2: #a1a1a6;
+    --c-separator: rgba(255, 255, 255, 0.16);
+    --c-fill: rgba(255, 255, 255, 0.08);
+    --c-fill-hover: rgba(255, 255, 255, 0.14);
+    --c-button-bg: #f5f5f7;
+    --c-button-fg: #1d1d1f;
+    --c-nav-bg: rgba(22, 22, 23, 0.8);
+    --c-img-loading: #2c2c2e;
+    --c-danger: #ff6961;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -8,18 +44,13 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  /* NOTE: do NOT pin html to height:100%. Lenis (smooth scroll) watches the
-     <html> element with a ResizeObserver to re-measure the scroll limit; a fixed
-     height freezes that box at the viewport height, so the observer never fires
-     when content grows (fonts settling, images, svh sticky cards) and the wheel
-     stops scrolling partway down. Auto height lets it grow with content. */
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  min-height: 100dvh; /* fill the viewport on short pages without pinning <html> */
-  overflow-x: clip; /* full-bleed rows + giant footer wordmark never scroll the page sideways */
+  min-height: 100dvh;
+  overflow-x: clip; /* full-bleed rows never scroll the page sideways */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -37,57 +68,40 @@ a {
   text-decoration: none;
 }
 
-/* Global focus-visible baseline — tone-aware via currentColor, zero specificity
-   so components can override with their own tone outline. (a11y contract §7) */
+/* Global focus ring, tone-aware via currentColor, zero specificity so
+   components can override. */
 :where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid currentColor;
-  outline-offset: 4px;
+  outline-offset: 3px;
 }
 
-/* Skip link — first focusable element, hidden until focused (a11y contract §7). */
+/* Skip link: first focusable element, hidden until focused. */
 .skip-link {
   position: fixed;
   top: 8px;
   left: 8px;
   z-index: 2000;
   transform: translateY(calc(-100% - 16px));
-  background: #0e0e0e;
-  color: #ffffff;
-  padding: 10px 16px;
-  font-family: var(--font-body);
-  font-size: 0.9375rem;
+  background: var(--c-button-bg);
+  color: var(--c-button-fg);
+  border-radius: 980px;
+  padding: 10px 18px;
+  font: 400 0.875rem/1.4 -apple-system, BlinkMacSystemFont, var(--font-inter), sans-serif;
   transition: transform 0.2s ease;
 }
 .skip-link:focus {
   transform: translateY(0);
-  outline: 2px solid #ffffff;
-  outline-offset: 2px;
 }
 
-/* Skip-link target is programmatically focusable (tabIndex -1) — no persistent outline. */
+#main {
+  padding-top: 76px; /* clears the floating nav capsule (theme layout.navClearance) */
+}
+
 #main:focus {
   outline: none;
 }
 
-/* Hero mount reveal — CSS-driven (not framer) so the above-the-fold LCP text
-   is never gated behind JS hydration. Elements opt in via the Rise styled
-   component in Hero.js; reduced motion skips it (rule below neutralizes it). */
-@keyframes heroRise {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Reduced-motion safety net (ui-spec §5). Framer components self-guard via
-   useReducedMotion; this neutralizes every CSS-driven transition/animation
-   (header bg, burger→×, hover underline/arrow, submit-button invert, skip-link,
-   hero rise) in one place so no transform/opacity animation survives — and
-   zeroes animation-delay so nothing stays hidden by a stagger offset. */
+/* Reduced motion: neutralize every CSS transition/animation in one place. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

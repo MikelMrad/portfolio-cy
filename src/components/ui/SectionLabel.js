@@ -1,18 +1,19 @@
 'use client';
 import { styled } from '@mui/material/styles';
 
-// `// {children}` marker before every section — `label` type, muted per tone.
+// Eyebrow above a section headline: short, sentence case, secondary color.
 const Root = styled('p', { shouldForwardProp: (p) => p !== 'tone' })(({ theme, tone }) => ({
-  ...theme.custom.type.label,
-  color: tone === 'night' ? theme.custom.colors.nightMuted : theme.custom.colors.inkMuted,
+  ...theme.custom.type.eyebrow,
+  color: tone === 'night' ? theme.custom.colors.nightLabel2 : theme.custom.colors.label2,
   margin: 0,
-  marginBottom: 32,
+  marginBottom: 12,
+  '&::first-letter': { textTransform: 'uppercase' },
 }));
 
 export default function SectionLabel({ children, tone = 'paper', ...rest }) {
   return (
     <Root tone={tone} {...rest}>
-      {`// ${children}`}
+      {children}
     </Root>
   );
 }

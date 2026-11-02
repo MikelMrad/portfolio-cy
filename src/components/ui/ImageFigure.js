@@ -2,19 +2,20 @@
 import Image from 'next/image';
 import { styled } from '@mui/material/styles';
 
-// Aspect-ratio wrapper (zero CLS) + next/image fill. `image` = { src, width, height, alt, caption? }.
+// Aspect-ratio frame (zero CLS) + next/image fill, rounded. `image` = { src, width, height, alt, caption? }.
 const Figure = styled('figure')({ margin: 0, width: '100%' });
 
 const Frame = styled('div')(({ theme }) => ({
   position: 'relative',
   width: '100%',
   backgroundColor: theme.custom.colors.imgLoading,
+  borderRadius: theme.custom.radius.image,
   overflow: 'hidden',
 }));
 
 const Caption = styled('figcaption')(({ theme }) => ({
   ...theme.custom.type.label,
-  color: theme.custom.colors.inkMuted,
+  color: theme.custom.colors.label2,
   marginTop: 12,
 }));
 

@@ -1,14 +1,14 @@
 'use client';
 
 // Four abstract line-art motifs (waves / starburst / concentric / rings).
-// 56px, stroke 1.5, currentColor — recreated inline (ui-spec §ValueCard).
+// Drawn on a 56 grid, shown at 40px, stroke 1.5, currentColor — recreated inline (ui-spec §ValueCard).
 const base = {
-  width: 56,
-  height: 56,
+  width: 40,
+  height: 40,
   viewBox: '0 0 56 56',
   fill: 'none',
   stroke: 'currentColor',
-  strokeWidth: 1.5,
+  strokeWidth: 2,
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
   'aria-hidden': true,

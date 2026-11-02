@@ -1,115 +1,86 @@
 'use client';
-import Image from 'next/image';
 import { styled } from '@mui/material/styles';
+import Section from '@/components/layout/Section';
 import SectionLabel from '@/components/ui/SectionLabel';
-import TextLink from '@/components/ui/TextLink';
 import Type from '@/components/ui/Type';
+import Reveal from '@/components/ui/Reveal';
 import ContactForm from './ContactForm';
 import { site } from '@/content/site';
 import { t } from '@/content/i18n';
 
-const Split = styled('div')(({ theme }) => ({
+const Grid = styled('div')(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '1fr',
-  [theme.breakpoints.up('md')]: { gridTemplateColumns: '1fr 1fr', minHeight: '86vh' },
+  gap: 20,
+  alignItems: 'start',
+  marginTop: 'clamp(40px, 6vw, 72px)',
+  [theme.breakpoints.up('md')]: { gridTemplateColumns: '5fr 7fr' },
 }));
 
-const Panel = styled('div')(({ theme }) => ({
-  position: 'relative',
-  overflow: 'hidden',
-  color: theme.custom.colors.snow,
-  backgroundColor: theme.custom.colors.night,
-  paddingBlock: 'clamp(32px, 6vw, 88px)',
-  paddingLeft: `max(clamp(32px, 6vw, 88px), env(safe-area-inset-left))`,
-  paddingRight: `max(clamp(32px, 6vw, 88px), env(safe-area-inset-right))`,
-  // Clear the fixed header (mobile height here; desktop height at md+).
-  paddingTop: `calc(${theme.custom.layout.header.xs}px + clamp(24px, 6vw, 88px))`,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  gap: 40,
-  // Shorter on mobile so the form is reachable sooner; desktop keeps the tall panel.
-  minHeight: 360,
-  [theme.breakpoints.up('md')]: {
-    paddingTop: `calc(${theme.custom.layout.header.md}px + clamp(32px, 6vw, 88px))`,
-    gap: 48,
-    minHeight: 480,
-  },
-}));
-
-const Scrim = styled('div')({
-  position: 'absolute',
-  inset: 0,
-  zIndex: 1,
-  backgroundColor: 'rgba(10,10,10,0.6)',
-});
-
-const Layer = styled('div')({ position: 'relative', zIndex: 2 });
-
-const ContactList = styled('ul')(({ theme }) => ({
-  ...theme.custom.type.label,
+// Grouped inset list: label over value, separated rows, one rounded group.
+const Group = styled('ul')(({ theme }) => ({
   listStyle: 'none',
   margin: 0,
-  padding: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 12,
+  padding: '0 20px',
+  borderRadius: theme.custom.radius.card,
+  backgroundColor: theme.custom.colors.bgAlt,
+  '& li + li': { borderTop: `1px solid ${theme.custom.colors.separator}` },
+}));
+
+const Item = styled('li')(({ theme }) => ({
+  paddingBlock: 16,
+  '& .k': { ...theme.custom.type.label, color: theme.custom.colors.label2, display: 'block' },
+  '& .v': { ...theme.custom.type.body, color: theme.custom.colors.label },
+  '& a.v': { display: 'inline-flex', alignItems: 'center', minHeight: 44, marginBlock: -10 },
+  '& a.v:hover': { textDecoration: 'underline', textUnderlineOffset: '0.15em' },
 }));
 
 const FormCard = styled('div')(({ theme }) => ({
-  backgroundColor: theme.custom.colors.paper,
-  color: theme.custom.colors.ink,
-  paddingBlock: 'clamp(32px, 6vw, 88px)',
-  paddingLeft: `max(clamp(32px, 6vw, 88px), env(safe-area-inset-left))`,
-  paddingRight: `max(clamp(32px, 6vw, 88px), env(safe-area-inset-right))`,
-  // Only the desktop split places this card under the header; on mobile it sits
-  // below the panel and needs no header offset.
-  [theme.breakpoints.up('md')]: {
-    paddingTop: `calc(${theme.custom.layout.header.md}px + clamp(24px, 4vw, 56px))`,
-  },
+  padding: 'clamp(24px, 4vw, 40px)',
+  borderRadius: theme.custom.radius.tile,
+  backgroundColor: theme.custom.colors.bgAlt,
 }));
-
-const panelImage = {
-  src: '/images/home/belief.svg',
-  alt: 'Atmospheric architectural render in the contact panel',
-};
 
 export default function ContactView() {
   const telHref = `tel:${site.phone.replace(/\s+/g, '')}`;
   return (
-    <Split>
-      <Panel>
-        <Image src={panelImage.src} alt={panelImage.alt} fill sizes="(min-width:900px) 50vw, 100vw" style={{ objectFit: 'cover', zIndex: 0 }} />
-        <Scrim />
-        <Layer>
-          <SectionLabel tone="night">contact</SectionLabel>
-          <Type token="display3" as="h1">
-            {t('contact.title')}
-          </Type>
-        </Layer>
-        <Layer>
-          <ContactList>
-            <li>
-              <TextLink href={`mailto:${site.email}`} tone="night" arrow={false}>
-                {site.email}
-              </TextLink>
-            </li>
-            <li>
-              <TextLink href={telHref} tone="night" arrow={false}>
-                {site.phone}
-              </TextLink>
-            </li>
-            <li>{site.location}</li>
-          </ContactList>
-        </Layer>
-      </Panel>
-
-      <FormCard>
-        <Type token="hSmall" as="h2">
-          {t('contact.formTitle')}
+    <Section tone="paper">
+      <Reveal>
+        <SectionLabel>Contact</SectionLabel>
+        <Type token="display1" as="h1">
+          {t('contact.title')}
         </Type>
-        <ContactForm />
-      </FormCard>
-    </Split>
+      </Reveal>
+      <Grid>
+        <Reveal delay={0.1}>
+          <Group>
+            <Item>
+              <span className="k">{t('contact.email')}</span>
+              <a className="v" href={`mailto:${site.email}`}>
+                {site.email}
+              </a>
+            </Item>
+            <Item>
+              <span className="k">Phone</span>
+              <a className="v" href={telHref}>
+                {site.phone}
+              </a>
+            </Item>
+            <Item>
+              <span className="k">Based in</span>
+              <span className="v">{site.location}</span>
+            </Item>
+          </Group>
+        </Reveal>
+        <Reveal delay={0.2}>
+          <FormCard>
+            <Type token="hSmall" as="h2">
+              {t('contact.formTitle')}
+            </Type>
+            <ContactForm />
+          </FormCard>
+        </Reveal>
+      </Grid>
+    </Section>
   );
 }

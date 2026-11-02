@@ -1,17 +1,18 @@
 'use client';
 import Section from '@/components/layout/Section';
-import Reveal from '@/components/ui/Reveal';
-import Type from '@/components/ui/Type';
+import ScrollText from '@/components/motion/ScrollText';
 
-// Paper manifesto statement (ui-spec §4.2).
+// Two-tone statement that lights up word by word on scroll.
 export default function Manifesto() {
   return (
     <Section tone="paper">
-      <Reveal>
-        <Type token="display2" as="p" style={{ maxWidth: '20ch' }}>
-          I design with intention. Every space is a dialogue between light, form, and time.
-        </Type>
-      </Reveal>
+      <ScrollText
+        parts={[
+          { text: 'I design with intention.' },
+          { text: 'Every space is a dialogue between light, form, and time.', muted: true },
+        ]}
+        sx={{ maxWidth: '22ch', marginInline: 'auto', textAlign: 'center' }}
+      />
     </Section>
   );
 }

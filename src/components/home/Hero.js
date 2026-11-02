@@ -1,139 +1,150 @@
 'use client';
+import Link from 'next/link';
 import Image from 'next/image';
-import { styled } from '@mui/material/styles';
+import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
+import { styled, useTheme } from '@mui/material/styles';
+import Container from '@/components/layout/Container';
 import SectionLabel from '@/components/ui/SectionLabel';
+import Button from '@/components/ui/Button';
 import TextLink from '@/components/ui/TextLink';
 import Type from '@/components/ui/Type';
-import LatestProjectCard from '@/components/ui/LatestProjectCard';
 import { site } from '@/content/site';
 import { t } from '@/content/i18n';
 import { latestProject } from '@/content/projects';
 
-// Home hero background — a dedicated raster image (not tied to any project).
-// Drop the real file at public/images/home/hero.webp; next/image serves it as-is
-// (images are unoptimized). WebP keeps the photographic texture (a traced SVG
-// posterizes it).
+// Home hero background: a dedicated raster image (not tied to any project).
 const heroImage = {
   src: '/images/home/hero.webp',
-  alt: 'Architectural project render behind the site introduction',
+  alt: 'Architectural project render at dusk, a glass building above stepped terraces and water',
 };
 
+// Headline words rise in one after another on load; the work below starts as
+// an inset rounded frame and opens to the full width as the page scrolls.
 const Root = styled('section')(({ theme }) => ({
-  position: 'relative',
-  minHeight: 'max(640px, 100svh)',
-  display: 'flex',
-  // Mobile: stack the copy column over the LatestProjectCard so neither is
-  // squeezed. Desktop keeps the single-row layout (the card is absolute on md+,
-  // so direction is inconsequential there).
-  flexDirection: 'column',
-  backgroundColor: theme.custom.colors.night,
-  color: theme.custom.colors.snow,
-  overflow: 'hidden',
-  [theme.breakpoints.up('md')]: { flexDirection: 'row' },
+  backgroundColor: theme.custom.colors.bg,
+  paddingTop: 'clamp(40px, 7vw, 88px)',
+  paddingBottom: 'clamp(24px, 4vw, 48px)',
 }));
 
-const Scrim = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  inset: 0,
-  backgroundColor: theme.custom.colors.scrim,
-  // deepen toward the bottom-left where the copy sits
-  backgroundImage: 'linear-gradient(to top, rgba(10,10,10,0.65), rgba(10,10,10,0.15))',
-  zIndex: 1,
-}));
-
-const Inner = styled('div')(({ theme }) => ({
-  position: 'relative',
-  zIndex: 2,
-  // Fill the hero height in the mobile column so the copy stays bottom-anchored
-  // (justify-content:flex-end); harmless in the desktop row.
-  flex: '1 1 auto',
-  width: '100%',
-  maxWidth: theme.custom.layout.maxWidth,
-  marginInline: 'auto',
-  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
-  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
-  paddingTop: 120,
-  paddingBottom: 48,
+const Copy = styled('div')({
+  textAlign: 'center',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'flex-end',
-}));
-
-const Actions = styled('div')({ marginTop: 32 });
-
-// Staggered fade-up on mount, CSS-driven (see @keyframes heroRise in globals.css).
-// Pure CSS keeps the above-the-fold LCP headline out of the JS-hydration path;
-// reduced motion is handled globally (animation neutralized → static, visible).
-const Rise = styled('div', { shouldForwardProp: (p) => p !== 'step' })(({ theme, step }) => {
-  const m = theme.custom.motion;
-  return {
-    '@media (prefers-reduced-motion: no-preference)': {
-      opacity: 0,
-      animation: `heroRise ${m.durations.hero}s ${m.ease} both`,
-      animationDelay: `${0.15 + step * m.stagger}s`,
-    },
-  };
+  alignItems: 'center',
 });
 
-const CardSlot = styled('div')(({ theme }) => ({
-  // Mobile: a full-width slot below the copy. position/zIndex lift it above the
-  // hero Scrim (zIndex:1); paddingBottom clears the home indicator when the card
-  // is the last thing over the image.
+const Actions = styled(motion.div)({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '8px 24px',
+  marginTop: 32,
+});
+
+const Frame = styled(motion.div)(({ theme }) => ({
   position: 'relative',
-  zIndex: 3,
-  marginTop: 24,
-  paddingLeft: `max(${theme.custom.layout.gutter}, env(safe-area-inset-left))`,
-  paddingRight: `max(${theme.custom.layout.gutter}, env(safe-area-inset-right))`,
-  paddingBottom: 'max(24px, env(safe-area-inset-bottom))',
-  [theme.breakpoints.up('md')]: {
-    position: 'absolute',
-    right: theme.custom.layout.gutter,
-    bottom: 48,
-    marginTop: 0,
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: 0,
-    zIndex: 3,
-  },
+  marginTop: 'clamp(40px, 6vw, 72px)',
+  height: 'min(78svh, 75vw)',
+  minHeight: 320,
+  overflow: 'hidden',
+  backgroundColor: theme.custom.colors.imgLoading,
+  '& a': { position: 'absolute', inset: 0, display: 'block' },
+  '& a:focus-visible': { outline: `2px solid #ffffff`, outlineOffset: -6, borderRadius: 24 },
 }));
 
+const Badge = styled('span')(({ theme }) => ({
+  ...theme.custom.type.label,
+  position: 'absolute',
+  left: '50%',
+  bottom: 24,
+  transform: 'translateX(-50%)',
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 8,
+  minHeight: 40,
+  paddingInline: 16,
+  borderRadius: theme.custom.radius.pill,
+  whiteSpace: 'nowrap',
+  color: '#1d1d1f',
+  backgroundColor: 'rgba(255,255,255,0.82)',
+  backdropFilter: 'saturate(180%) blur(20px)',
+  WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+  '& b': { fontWeight: 600 },
+}));
+
+const word = {
+  hidden: { opacity: 0, y: '0.45em', filter: 'blur(10px)' },
+  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+};
+
 export default function Hero() {
+  const m = useTheme().custom.motion;
+  const enter = (delay) => ({
+    initial: { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: m.durations.enter, ease: m.easeOut, delay },
+  });
+
+  // 0 → 1 over the first ~60% of a viewport of scroll.
+  const { scrollY } = useScroll();
+  const inset = useTransform(scrollY, [0, 520], [5, 0]); // % per side
+  const radius = useTransform(scrollY, [0, 520], [28, 0]);
+  const clipPath = useMotionTemplate`inset(0 ${inset}% round ${radius}px)`;
+  const imgScale = useTransform(scrollY, [0, 520], [1.12, 1]);
+
+  const headline = 'Architectural Portfolio'.split(' ');
+
   return (
     <Root>
-      <Image
-        src={heroImage.src}
-        alt={heroImage.alt}
-        fill
-        priority
-        sizes="100vw"
-        style={{ objectFit: 'cover', zIndex: 0 }}
-      />
-      <Scrim />
-      <Inner>
-        <Rise step={0}>
-          <SectionLabel tone="night">{site.wordmark.replace(/\.$/, '')}</SectionLabel>
-        </Rise>
-        <Rise step={1}>
-          <Type token="display1" as="h1" sx={{ maxWidth: '14ch', '& em': { fontStyle: 'italic' } }}>
-            Architectural <em>Portfolio</em>
+      <Container>
+        <Copy>
+          <motion.div {...enter(0)}>
+            <SectionLabel>{site.name}</SectionLabel>
+          </motion.div>
+          <Type token="display1" as="h1" aria-label={headline.join(' ')}>
+            <motion.span
+              aria-hidden="true"
+              initial="hidden"
+              animate="visible"
+              transition={{ staggerChildren: 0.12, delayChildren: 0.1 }}
+              style={{ display: 'inline-block' }}
+            >
+              {headline.map((w, i) => (
+                <motion.span
+                  key={w}
+                  variants={word}
+                  transition={{ duration: m.durations.enter, ease: m.easeOut }}
+                  style={{ display: 'inline-block', marginRight: i < headline.length - 1 ? '0.25em' : 0 }}
+                >
+                  {w}
+                </motion.span>
+              ))}
+            </motion.span>
           </Type>
-        </Rise>
-        <Rise step={2}>
-          <Type token="body" as="p" sx={{ maxWidth: '62ch', opacity: 0.9, marginTop: 24 }}>
-            Junior architect based in {site.location}, designing civic, cultural and residential spaces rooted in their context.
-          </Type>
-        </Rise>
-        <Rise step={3}>
-          <Actions>
-            <TextLink href="/projects" tone="night">
-              {t('home.viewProjects')}
-            </TextLink>
+          <motion.div {...enter(0.35)}>
+            <Type token="intro" as="p" muted sx={{ maxWidth: '36ch', marginTop: '20px' }}>
+              Junior architect based in {site.location}, designing civic, cultural and residential spaces rooted in their context.
+            </Type>
+          </motion.div>
+          <Actions {...enter(0.5)}>
+            <Button href="/projects">{t('home.viewProjects')}</Button>
+            <TextLink href="/contact">{t('home.getInTouch')}</TextLink>
           </Actions>
-        </Rise>
-      </Inner>
-      <CardSlot>
-        <LatestProjectCard project={latestProject} />
-      </CardSlot>
+        </Copy>
+      </Container>
+      {latestProject ? (
+        <Frame style={{ clipPath }} {...enter(0.6)}>
+          <Link href={`/projects/${latestProject.slug}/`} aria-label={`${t('home.latestProject')}: ${latestProject.title}, ${latestProject.year}`}>
+            <motion.div style={{ position: 'absolute', inset: 0, scale: imgScale }}>
+              <Image src={heroImage.src} alt={heroImage.alt} fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
+            </motion.div>
+            <Badge aria-hidden="true">
+              {t('home.latestProject')} <b>{latestProject.title}</b> ›
+            </Badge>
+          </Link>
+        </Frame>
+      ) : null}
     </Root>
   );
 }
