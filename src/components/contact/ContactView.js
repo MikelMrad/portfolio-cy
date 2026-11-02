@@ -66,6 +66,14 @@ export default function ContactView() {
                 {site.phone}
               </a>
             </Item>
+            {site.socials.map((s) => (
+              <Item key={s.label}>
+                <span className="k">{s.label}</span>
+                <a className="v" href={s.href} target="_blank" rel="noopener noreferrer">
+                  {s.href.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+                </a>
+              </Item>
+            ))}
             <Item>
               <span className="k">Based in</span>
               <span className="v">{site.location}</span>

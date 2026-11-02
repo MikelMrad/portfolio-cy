@@ -11,6 +11,8 @@ import ProjectConcept from '@/components/projects/ProjectConcept';
 import ProjectGallery from '@/components/projects/ProjectGallery';
 import ProjectNav from '@/components/projects/ProjectNav';
 import { projects, getProject, conceptImagesFor } from '@/content/projects';
+import { site } from '@/content/site';
+import { absoluteUrl, assetUrl, jsonLdScript } from '@/content/seo';
 
 export const dynamicParams = false;
 
@@ -22,7 +24,21 @@ export async function generateMetadata({ params }) {
   const { slug } = await params; // Next 16: params is a Promise
   const p = getProject(slug);
   if (!p) return { title: 'Project' };
-  return { title: p.title, description: p.summary };
+  const path = `/projects/${p.slug}/`;
+  const description = `${p.title}, ${p.location}. ${p.academicContext} (${p.year}) by ${site.name}, architect. ${p.summary}`;
+  return {
+    title: p.title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      type: 'article',
+      url: path,
+      title: `${p.title} — ${site.name}`,
+      description,
+      images: [{ url: p.heroImage.src, width: p.heroImage.width, height: p.heroImage.height, alt: p.heroImage.alt }],
+    },
+    twitter: { card: 'summary_large_image', images: [p.heroImage.src] },
+  };
 }
 
 const sentence = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -96,8 +112,24 @@ export default async function ProjectDetailPage({ params }) {
     },
   ].filter(Boolean);
 
+  // schema.org CreativeWork: ties the project to its author for search engines.
+  const projectJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    description: project.summary,
+    url: absoluteUrl(`/projects/${project.slug}`),
+    image: [project.heroImage, ...project.renders].slice(0, 6).map((im) => assetUrl(im.src)),
+    dateCreated: String(project.year),
+    genre: 'Architecture',
+    keywords: [...project.categories, ...project.tools].join(', '),
+    locationCreated: { '@type': 'Place', name: project.location },
+    creator: { '@type': 'Person', name: site.name, url: absoluteUrl('/') },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(projectJsonLd)} />
       <ScrollProgress />
       <LocalNav title={project.title} sections={sections.map((s) => ({ id: s.id, label: s.nav }))} />
       <ProjectHero project={project} />

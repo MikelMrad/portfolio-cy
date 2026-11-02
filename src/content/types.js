@@ -52,6 +52,7 @@
 
 /**
  * @typedef {Object} SiteMeta
+ * @property {string} url         // canonical origin, e.g. 'https://www.cynthianahra.com'
  * @property {string} name        // 'Cynthia Nahra'
  * @property {string} wordmark    // 'cynthia nahra.'
  * @property {string} role        // 'Junior Architect'

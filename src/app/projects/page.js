@@ -6,7 +6,10 @@ import { projects } from '@/content/projects';
 
 export const metadata = {
   title: 'Projects',
-  description: 'Seven academic architecture projects — civic, cultural, residential and temporary.',
+  description:
+    'Architecture projects by Cynthia Nahra, architect in Beirut: an opera house, municipalities, a convention center, student housing, affordable housing and a temporary theatre.',
+  alternates: { canonical: '/projects/' },
+  openGraph: { url: '/projects/' },
 };
 
 export default function ProjectsPage() {

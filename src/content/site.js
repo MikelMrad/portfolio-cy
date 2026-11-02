@@ -1,5 +1,8 @@
 /** @type {import('./types').SiteMeta} */
 export const site = {
+  // Canonical origin for SEO (sitemap, canonical URLs, link previews). Must match
+  // the domain visitors end up on in Vercel (www, since apex redirects to www).
+  url: 'https://www.cynthianahra.com',
   name: 'Cynthia Nahra',
   wordmark: 'cynthia nahra.',
   role: 'Junior Architect',
@@ -9,7 +12,7 @@ export const site = {
   education: 'Saint-Joseph University of Beirut (USJ)', // Architecture Diploma, 2021–2026
   // Add real profiles when confirmed, e.g. { label: 'LinkedIn', href: 'https://…' }.
   // The footer renders only entries with a real href, so an empty list hides the column.
-  socials: [],
+  socials: [{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/cynthia-nahra/' }],
   cv: { href: '/files/Cynthia-Nahra-CV.pdf', size: 'PDF, 112 KB' }, // public/files
   credit: { name: 'Mikel Mrad', href: 'https://mikelmrad.dev' }, // footer "Site by"
   tools: ['AutoCAD', 'Revit', 'Lumion', 'SketchUp', 'Photoshop', 'InDesign'],

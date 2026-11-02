@@ -1,4 +1,5 @@
 'use client';
+import { Fragment } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useMotionTemplate } from 'framer-motion';
@@ -73,6 +74,16 @@ const Badge = styled('span')(({ theme }) => ({
   '& b': { fontWeight: 600 },
 }));
 
+// Present for screen readers and search engines, invisible on screen.
+const VisuallyHidden = styled('span')({
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+});
+
 const word = {
   hidden: { opacity: 0, y: '0.45em', filter: 'blur(10px)' },
   visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
@@ -99,26 +110,28 @@ export default function Hero() {
     <Root>
       <Container>
         <Copy>
-          <motion.div {...enter(0)}>
-            <SectionLabel>{site.name}</SectionLabel>
-          </motion.div>
-          <Type token="display1" as="h1" aria-label={headline.join(' ')}>
+          {/* One h1 carrying the name and the headline, so search engines read
+              "Cynthia Nahra, Architectural Portfolio" as the page's main heading. */}
+          <Type token="display1" as="h1">
+            <motion.span {...enter(0)} style={{ display: 'block' }}>
+              <SectionLabel as="span" style={{ display: 'block' }}>
+                {site.name}
+                <VisuallyHidden>, </VisuallyHidden>
+              </SectionLabel>
+            </motion.span>
             <motion.span
-              aria-hidden="true"
               initial="hidden"
               animate="visible"
               transition={{ staggerChildren: 0.12, delayChildren: 0.1 }}
               style={{ display: 'inline-block' }}
             >
               {headline.map((w, i) => (
-                <motion.span
-                  key={w}
-                  variants={word}
-                  transition={{ duration: m.durations.enter, ease: m.easeOut }}
-                  style={{ display: 'inline-block', marginRight: i < headline.length - 1 ? '0.25em' : 0 }}
-                >
-                  {w}
-                </motion.span>
+                <Fragment key={w}>
+                  {i > 0 ? ' ' : null}
+                  <motion.span variants={word} transition={{ duration: m.durations.enter, ease: m.easeOut }} style={{ display: 'inline-block' }}>
+                    {w}
+                  </motion.span>
+                </Fragment>
               ))}
             </motion.span>
           </Type>
