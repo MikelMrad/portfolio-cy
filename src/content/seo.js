@@ -4,7 +4,9 @@ import { site } from './site';
 // for (name, "architect", city, school) in plain sentences, not keyword lists.
 export const seo = {
   title: `${site.name} — Architect in ${site.location}`,
-  description: `${site.name} is a junior architect based in ${site.location}. Architecture portfolio of civic, cultural and residential projects, from concept to construction drawings. Graduate of ${site.education}.`,
+  // Kept under ~155 characters so Google shows it whole on mobile instead of
+  // truncating it and padding the snippet with page text.
+  description: `${site.name} is a junior architect in ${site.location}. Portfolio of civic, cultural and residential architecture, from concept to construction drawings.`,
   keywords: [
     site.name,
     'Cynthia Nahra architect',

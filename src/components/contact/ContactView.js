@@ -53,7 +53,7 @@ export default function ContactView() {
       </Reveal>
       <Grid>
         <Reveal delay={0.1}>
-          <Group>
+          <Group data-nosnippet="">
             <Item>
               <span className="k">{t('contact.email')}</span>
               <a className="v" href={`mailto:${site.email}`}>

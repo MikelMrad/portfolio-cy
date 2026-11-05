@@ -178,7 +178,9 @@ export default function Footer() {
   };
 
   return (
-    <Root>
+    // data-nosnippet: keep footer contact details (phone, email) out of Google's
+    // search result snippets. Links here are still crawled.
+    <Root data-nosnippet="">
       <Inner>
         {pathname !== contactPage.href ? (
           <Cta>
