@@ -1,5 +1,6 @@
 import ContactView from '@/components/contact/ContactView';
 import { site } from '@/content/site';
+import { breadcrumbJsonLd, jsonLdScript } from '@/content/seo';
 
 export const metadata = {
   title: 'Contact',
@@ -9,5 +10,13 @@ export const metadata = {
 };
 
 export default function ContactPage() {
-  return <ContactView />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd([{ name: 'Contact', path: '/contact' }]))}
+      />
+      <ContactView />
+    </>
+  );
 }

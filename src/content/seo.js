@@ -43,5 +43,26 @@ export const personJsonLd = {
   sameAs: site.socials.filter((s) => s.href).map((s) => s.href),
 };
 
+// schema.org WebSite, rendered on every page so Google has the site name and root.
+export const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.name,
+  alternateName: ['cynthianahra.com', 'Cynthia Nahra Architect'],
+  url: absoluteUrl('/'),
+};
+
+// schema.org BreadcrumbList for a page; `items` is [{ name, path }], Home is prepended.
+export const breadcrumbJsonLd = (items) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [{ name: 'Home', path: '/' }, ...items].map(({ name, path }, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name,
+    item: absoluteUrl(path),
+  })),
+});
+
 // Embed JSON-LD safely (escape "<" so content can't close the script tag).
 export const jsonLdScript = (data) => ({ __html: JSON.stringify(data).replace(/</g, '\\u003c') });

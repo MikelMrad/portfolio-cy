@@ -12,7 +12,7 @@ import ProjectGallery from '@/components/projects/ProjectGallery';
 import ProjectNav from '@/components/projects/ProjectNav';
 import { projects, getProject, conceptImagesFor } from '@/content/projects';
 import { site } from '@/content/site';
-import { absoluteUrl, assetUrl, jsonLdScript } from '@/content/seo';
+import { absoluteUrl, assetUrl, breadcrumbJsonLd, jsonLdScript } from '@/content/seo';
 
 export const dynamicParams = false;
 
@@ -131,6 +131,15 @@ export default async function ProjectDetailPage({ params }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(projectJsonLd)} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(
+          breadcrumbJsonLd([
+            { name: 'Projects', path: '/projects' },
+            { name: project.title, path: `/projects/${project.slug}` },
+          ]),
+        )}
+      />
       <ScrollProgress />
       <LocalNav title={project.title} sections={sections.map((s) => ({ id: s.id, label: s.nav }))} />
       <ProjectHero project={project} />

@@ -6,7 +6,7 @@ import Footer from '@/components/layout/Footer';
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import { site } from '@/content/site';
 import { t } from '@/content/i18n';
-import { seo, personJsonLd, jsonLdScript } from '@/content/seo';
+import { seo, personJsonLd, websiteJsonLd, jsonLdScript } from '@/content/seo';
 import './globals.css';
 
 // The type stack leads with the system font (SF Pro on Apple devices). Inter is
@@ -62,6 +62,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={inter.variable}>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(personJsonLd)} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(websiteJsonLd)} />
         <AppRouterCacheProvider>
           <ThemeRegistry>
             <SmoothScroll>

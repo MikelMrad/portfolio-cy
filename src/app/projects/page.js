@@ -3,6 +3,7 @@ import Type from '@/components/ui/Type';
 import Reveal from '@/components/ui/Reveal';
 import ProjectsGrid from '@/components/projects/ProjectsGrid';
 import { projects } from '@/content/projects';
+import { breadcrumbJsonLd, jsonLdScript } from '@/content/seo';
 
 export const metadata = {
   title: 'Projects',
@@ -14,16 +15,22 @@ export const metadata = {
 
 export default function ProjectsPage() {
   return (
-    <Section tone="paper">
-      <Reveal>
-        <Type token="display1" as="h1">
-          Projects
-        </Type>
-        <Type token="intro" as="p" muted sx={{ maxWidth: '34ch', marginTop: '16px', marginBottom: 'clamp(40px, 6vw, 72px)' }}>
-          A collection of academic work: civic, cultural and residential.
-        </Type>
-      </Reveal>
-      <ProjectsGrid projects={projects} />
-    </Section>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd([{ name: 'Projects', path: '/projects' }]))}
+      />
+      <Section tone="paper">
+        <Reveal>
+          <Type token="display1" as="h1">
+            Projects
+          </Type>
+          <Type token="intro" as="p" muted sx={{ maxWidth: '34ch', marginTop: '16px', marginBottom: 'clamp(40px, 6vw, 72px)' }}>
+            A collection of academic work: civic, cultural and residential.
+          </Type>
+        </Reveal>
+        <ProjectsGrid projects={projects} />
+      </Section>
+    </>
   );
 }

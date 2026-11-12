@@ -1,5 +1,6 @@
 import AboutView from '@/components/about/AboutView';
 import { site } from '@/content/site';
+import { breadcrumbJsonLd, jsonLdScript } from '@/content/seo';
 
 export const metadata = {
   title: 'About',
@@ -9,5 +10,13 @@ export const metadata = {
 };
 
 export default function AboutPage() {
-  return <AboutView />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd([{ name: 'About', path: '/about' }]))}
+      />
+      <AboutView />
+    </>
+  );
 }
